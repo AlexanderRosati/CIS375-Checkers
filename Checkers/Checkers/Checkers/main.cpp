@@ -12,6 +12,7 @@
 
 //prototypes
 void gameLoop();
+void testDriver();
 
 //enum
 enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen, TutorialScreen, Victory };
@@ -19,6 +20,7 @@ enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen
 int main()
 {
 	gameLoop();
+	//testDriver();
 }
 
 //Description: Game loop (aka Where everything happens).
@@ -132,5 +134,28 @@ void gameLoop()
 
 		//push frame to screen
 		window.display();
+	}
+}
+
+//For testing, delete stuff you added when done
+void testDriver()
+{
+	sf::RenderWindow window(sf::VideoMode(600, 600), "Checkers"); //KEEP
+	sf::Event event; //KEEP
+
+	while (window.isOpen()) //KEEP
+	{
+		while (window.pollEvent(event)) //KEEP
+		{
+			switch (event.type) //KEEP
+			{
+				case sf::Event::Closed: //KEEP
+					window.close(); //KEEP
+					break; //KEEP
+			}
+		}
+
+		window.clear(); //KEEP
+		window.display(); //KEEP
 	}
 }
