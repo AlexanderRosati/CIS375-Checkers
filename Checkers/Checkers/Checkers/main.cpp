@@ -1,5 +1,6 @@
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
+#include <iostream>
 #include "Board.h"
 #include "CustomizationMenu.h"
 #include "Game.h"

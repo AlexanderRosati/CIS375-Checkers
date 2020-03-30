@@ -69,4 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\SONGS\cold-existence.ogg" />
+    <None Include="..\..\SONGS\go-to-bed.ogg" />
+    <None Include="..\..\SONGS\idols.ogg" />
+  </ItemGroup>
 </Project>
