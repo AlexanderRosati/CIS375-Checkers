@@ -32,7 +32,7 @@ void gameLoop()
 	//vars
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Checkers"); //game window
 	sf::Event event; //event object
-	Screen whatsDisplaying = TitleScreen; //keep track of which screen is displaying
+	Screen whatsDisplaying; //keep track of which screen is displaying
 	CustomizationMenu customizationMenu; //customization menu object
 	Game game; //object for game screen
 	MusicSelectionMenu musicSelectionMenu; //object for music selection menu
@@ -46,6 +46,9 @@ void gameLoop()
 	wholeScreen.setPosition(sf::Vector2f(0, 0));
 	wholeScreen.setSize(sf::Vector2f(600, 600));
 	wholeScreen.setFillColor(BABY_BLUE);
+
+	//set enum
+	whatsDisplaying = TitleScreen;
 
 	//game loop; loops as long as game window is open
 	while (window.isOpen())
