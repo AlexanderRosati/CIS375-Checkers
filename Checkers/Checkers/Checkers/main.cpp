@@ -10,12 +10,15 @@
 #include "Tutorial.h"
 #include "VictoryScreen.h"
 
+#define BABY_BLUE sf::Color(17, 166, 236)
+
 //prototypes
 void gameLoop();
 void testDriver();
 
 //enum
-enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen, TutorialScreen, Victory };
+enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen,
+			  TutorialScreen, Victory, Nothing };
 
 int main()
 {
@@ -37,7 +40,12 @@ void gameLoop()
 	TitleMenu titleMenu; //object for title menu
 	Tutorial tutorial; //object for tutorial
 	VictoryScreen victoryScreen; //object for victory screen
-
+	
+	//rectangle that covers whole screen
+	sf::RectangleShape wholeScreen;
+	wholeScreen.setPosition(sf::Vector2f(0, 0));
+	wholeScreen.setSize(sf::Vector2f(600, 600));
+	wholeScreen.setFillColor(BABY_BLUE);
 
 	//game loop; loops as long as game window is open
 	while (window.isOpen())
@@ -51,6 +59,7 @@ void gameLoop()
 				//X at top is clicked
 				case sf::Event::Closed:
 					window.close();
+					exit(0);
 					break;
 
 				//mouse button is clicked
@@ -97,6 +106,9 @@ void gameLoop()
 
 		//wipes everything off screen
 		window.clear();
+
+		//draw baby blue background
+		window.draw(wholeScreen);
 
 		//draw game
 		switch (whatsDisplaying)

@@ -11,7 +11,7 @@ class TitleMenu
 		void movesOffscreen(); //moves title menu offscreen
 		void movesOnscreen(); //moves title menu onscreen
 	private:
-		sf::Text title; //label that says 'Checkers' at top of title menu.
+		sf::Sprite title; //label that says 'Checkers' at top of title menu.
 		sf::Sprite playGameButton; //button that says 'Play Game'
 		sf::Sprite musicSelectionButton; //button that says 'Music Selection Menu'
 		sf::Sprite customizationsButton; //button that says 'Customizations'

@@ -170,6 +170,43 @@
     <None Include="..\..\SONGS\go-to-bed.ogg" />
     <None Include="..\..\SONGS\idols.ogg" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\IMAGES\customization-selection-menu\back-button-customizatin-menu.png" />
+    <Image Include="..\..\IMAGES\customization-selection-menu\customization1-button.png" />
+    <Image Include="..\..\IMAGES\customization-selection-menu\customization2-button.png" />
+    <Image Include="..\..\IMAGES\customization-selection-menu\customization3-button.png" />
+    <Image Include="..\..\IMAGES\customization-selection-menu\customization4-button.png" />
+    <Image Include="..\..\IMAGES\customization-selection-menu\title-customization-selection-menu.png" />
+    <Image Include="..\..\IMAGES\customizations\customization1\board-customization1.png" />
+    <Image Include="..\..\IMAGES\customizations\customization1\player-one-checker-customization1.png" />
+    <Image Include="..\..\IMAGES\customizations\customization1\player-one-king-custmization1.png" />
+    <Image Include="..\..\IMAGES\customizations\customization1\player-two-checker-customization1.png" />
+    <Image Include="..\..\IMAGES\customizations\customization1\player-two-king-customization1.png" />
+    <Image Include="..\..\IMAGES\customizations\customization2\board-customization2.png" />
+    <Image Include="..\..\IMAGES\customizations\customization2\player-one-checker-customization2.png" />
+    <Image Include="..\..\IMAGES\customizations\customization2\player-one-king-customization2.png" />
+    <Image Include="..\..\IMAGES\customizations\customization2\player-two-checker-customization2.png" />
+    <Image Include="..\..\IMAGES\customizations\customization2\player-two-king-customization2.png" />
+    <Image Include="..\..\IMAGES\customizations\customization3\board-customization3.png" />
+    <Image Include="..\..\IMAGES\customizations\customization3\player-one-checker-customization3.png" />
+    <Image Include="..\..\IMAGES\customizations\customization3\player-one-king-customization3.png" />
+    <Image Include="..\..\IMAGES\customizations\customization3\player-two-checker-customization3.png" />
+    <Image Include="..\..\IMAGES\customizations\customization3\player-two-king-customization3.png" />
+    <Image Include="..\..\IMAGES\customizations\customization4\board-customization4.png" />
+    <Image Include="..\..\IMAGES\customizations\customization4\player-one-checker-customization4.png" />
+    <Image Include="..\..\IMAGES\customizations\customization4\player-one-king-customization4.png" />
+    <Image Include="..\..\IMAGES\customizations\customization4\player-two-checker-customization4.png" />
+    <Image Include="..\..\IMAGES\customizations\customization4\player-two-king-customization4.png" />
+    <Image Include="..\..\IMAGES\music-selection-menu\backtotitlebutton.png" />
+    <Image Include="..\..\IMAGES\music-selection-menu\leftarrow.png" />
+    <Image Include="..\..\IMAGES\music-selection-menu\rightarrow.png" />
+    <Image Include="..\..\IMAGES\music-selection-menu\title-music-selection-menu.png" />
+    <Image Include="..\..\IMAGES\title-screen\customizations-titlemenu-button.png" />
+    <Image Include="..\..\IMAGES\title-screen\title-music-selection-button.png" />
+    <Image Include="..\..\IMAGES\title-screen\title-playgame-button.png" />
+    <Image Include="..\..\IMAGES\title-screen\title-titlemenu.png" />
+    <Image Include="..\..\IMAGES\title-screen\title-tutorial-button.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

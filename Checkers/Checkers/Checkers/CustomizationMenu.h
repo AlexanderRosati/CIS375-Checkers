@@ -20,7 +20,7 @@ class CustomizationMenu
 		void moveOnscreen(); //move customization menu onscreen
 		void moveSelectionOutline(int); //move selection outline
 	private:
-		sf::Text title; //label that says 'Customization Menu'
+		sf::Sprite title; //label that says 'Customization Menu'
 		sf::Sprite customizations[4]; //images for customizations
 		sf::Sprite backToTitleButton; //back to title button
 		int currCustomization; //keeps track of current customization

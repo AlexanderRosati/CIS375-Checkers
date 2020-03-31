@@ -19,7 +19,7 @@ class MusicSelectionMenu
 		//data members
 		sf::Sprite leftArrow; //left arrow image
 		sf::Sprite rightArrow; //right arrow image
-		sf::Text title; //title of menu
+		sf::Sprite title; //title of menu
 		sf::Text songName; //song name that is displayed
 		sf::Music songs[3]; //songs that play
 		int currSong; //keep track of song that's playing
