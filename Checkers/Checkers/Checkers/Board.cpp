@@ -1,6 +1,8 @@
 #include "Board.h"
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
+#include <string>
+#include <iostream>
 
 //Description: Returns true if space number 'spaceNum' is empty. Otherwise,
 //return false.
@@ -26,11 +28,281 @@ bool Board::canCheckerMove(int spaceNum)
 	return true;
 }
 
+
+//Description: returns adjacent spaces. helper method of possibleMoves
+std::vector<int> Board::adjSpaces(char status, char player, int row, int contentIndx)
+{
+	//vector for adjacent spaces
+	std::vector<int> adjSpaces;
+
+	//if it's a regular checker and player 2
+	if (status == 'P' && player == '2')
+	{
+		//look at row on board
+		switch (row)
+		{
+			//4-5 rows
+			case 0:
+			case 2:
+			case 4:
+			case 6:
+				
+				//edge cases that only have one adj space
+				if (contentIndx == 3)
+				{
+					adjSpaces.push_back(7);
+				}
+
+				else if (contentIndx == 11)
+				{
+					adjSpaces.push_back(15);
+				}
+
+				else if (contentIndx == 19)
+				{
+					adjSpaces.push_back(23);
+				}
+
+				else if (contentIndx == 27)
+				{
+					adjSpaces.push_back(31);
+				}
+
+				//two adj spaces
+				else
+				{
+					adjSpaces.push_back(contentIndx + 4);
+					adjSpaces.push_back(contentIndx + 5);
+				}
+
+				break;
+
+			//3-4 cases
+			case 1:
+			case 3:
+			case 5:
+				//edge cases that have only one adj space
+				if (contentIndx == 4)
+				{
+					adjSpaces.push_back(8);
+				}
+
+				else if (contentIndx == 12)
+				{
+					adjSpaces.push_back(16);
+				}
+
+				else if (contentIndx == 20)
+				{
+					adjSpaces.push_back(24);
+				}
+
+				//two adj spaces
+				else
+				{
+					adjSpaces.push_back(contentIndx + 3);
+					adjSpaces.push_back(contentIndx + 4);
+				}
+
+				break;
+		}
+	}
+
+	//its a regular checker and player one
+	else if (status == 'P' && player == '1')
+	{
+		switch (row)
+		{
+			case 7:
+			case 5:
+			case 3:
+			case 1:
+				if (contentIndx == 28)
+				{
+					adjSpaces.push_back(24);
+				}
+
+				else if (contentIndx == 20)
+				{
+					adjSpaces.push_back(16);
+				}
+
+				else if (contentIndx == 12)
+				{
+					adjSpaces.push_back(8);
+				}
+
+				else if (contentIndx == 4)
+				{
+					adjSpaces.push_back(0);
+				}
+
+				else
+				{
+					adjSpaces.push_back(contentIndx - 4);
+					adjSpaces.push_back(contentIndx - 5);
+				}
+
+				break;
+
+			case 6:
+			case 4:
+			case 2:
+				if (contentIndx == 27)
+				{
+					adjSpaces.push_back(23);
+				}
+
+				else if (contentIndx == 19)
+				{
+					adjSpaces.push_back(15);
+				}
+
+				else if (contentIndx == 11)
+				{
+					adjSpaces.push_back(7);
+				}
+
+				else
+				{
+					adjSpaces.push_back(contentIndx - 3);
+					adjSpaces.push_back(contentIndx - 4);
+				}
+
+				break;
+		}
+	}
+
+	//its a king
+	else if (status == 'K')
+	{
+		//look at each row on board
+		switch (row)
+		{
+			//top row
+			case 0:
+				//corner
+				if (contentIndx == 3)
+				{
+					adjSpaces.push_back(7);
+				}
+
+				//top edge of board
+				else
+				{
+					adjSpaces.push_back(contentIndx + 4);
+					adjSpaces.push_back(contentIndx + 5);
+				}
+
+				break;
+
+			//-5, -4, +3, +4
+			case 1:
+			case 3:
+			case 5:
+				//left edge of board
+				if (contentIndx == 4)
+				{
+					adjSpaces.push_back(0);
+					adjSpaces.push_back(8);
+				}
+
+				else if (contentIndx == 12)
+				{
+					adjSpaces.push_back(8);
+					adjSpaces.push_back(16);
+				}
+
+				else if (contentIndx == 20)
+				{
+					adjSpaces.push_back(16);
+					adjSpaces.push_back(24);
+				}
+
+				//center of board
+				else
+				{
+					adjSpaces.push_back(contentIndx - 5);
+					adjSpaces.push_back(contentIndx - 4);
+					adjSpaces.push_back(contentIndx + 3);
+					adjSpaces.push_back(contentIndx + 4);
+				}
+
+				break;
+
+			//-4. -3, +4, +5
+			case 2:
+			case 4:
+			case 6:
+
+				//right edge of board
+				if (contentIndx == 11)
+				{
+					adjSpaces.push_back(7);
+					adjSpaces.push_back(15);
+				}
+
+				else if (contentIndx == 19)
+				{
+					adjSpaces.push_back(15);
+					adjSpaces.push_back(23);
+				}
+
+				else if (contentIndx == 27)
+				{
+					adjSpaces.push_back(23);
+					adjSpaces.push_back(31);
+				}
+
+				//center of board
+				else
+				{
+					adjSpaces.push_back(contentIndx - 4);
+					adjSpaces.push_back(contentIndx - 3);
+					adjSpaces.push_back(contentIndx + 4);
+					adjSpaces.push_back(contentIndx + 5);
+				}
+
+				break;
+
+			case 7:
+				
+				//corner
+				if (contentIndx == 28)
+				{
+					adjSpaces.push_back(24);
+				}
+
+				//bottom edge of board
+				else
+				{
+					adjSpaces.push_back(contentIndx - 4);
+					adjSpaces.push_back(contentIndx - 5);
+				}
+
+				break;
+		}
+	}
+
+	//return adj spaces
+	return adjSpaces;
+}
+
 //Description: Returns where a checker can be moved and what needs to be
 //removed from the board if it is moved there.
+//Precondition: Space is not empty. spaceNum is between 1 and 32.
 std::vector<std::pair<int, std::vector<int>>>
 Board::possibleMoves(int spaceNum)
 {
+	//local vars
+	int contentIndx = spaceNum - 1;
+	int row = contentIndx / 4;
+	char status = content[contentIndx].at(0);
+	char player = content[contentIndx].at(1);
+	std::vector<int> adjacent;
+
+	adjacent = adjSpaces(status, player, row, contentIndx);
+
 	//temporary please delete
 	std::vector<std::pair<int, std::vector<int>>> temp;
 	return temp;

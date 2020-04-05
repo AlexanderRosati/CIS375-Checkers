@@ -150,6 +150,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MusicSelectionMenu.cpp" />
+    <ClCompile Include="possibleMovesTestDriver.cpp" />
     <ClCompile Include="SoundBoard.cpp" />
     <ClCompile Include="TitleMenu.cpp" />
     <ClCompile Include="Tutorial.cpp" />

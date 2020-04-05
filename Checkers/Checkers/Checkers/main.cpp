@@ -15,6 +15,7 @@
 //prototypes
 void gameLoop();
 void testDriver();
+void possibleMovesTestDriver();
 
 //enum
 enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen,
@@ -22,6 +23,7 @@ enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen
 
 int main()
 {
+	possibleMovesTestDriver();
 	gameLoop();
 	//testDriver();
 }

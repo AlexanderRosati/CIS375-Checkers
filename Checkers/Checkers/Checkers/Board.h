@@ -17,6 +17,7 @@ class Board
 		sf::Sprite playerTwoKingImg; //image for player two's king
 		sf::Sprite boardImage; //image for the board
 		SoundBoard* soundBoard; //ref to sound board
+		std::string content[32]; //says what is on the board
 
 		//methods
 		bool isSpaceEmpty(int); //tells you if a space is empty
@@ -30,9 +31,9 @@ class Board
 		void kingMe(int); //kings a checker
 		Board(); //constructor
 		void drawBoard(); //draws board
+		std::vector<int> adjSpaces(char, char, int, int); //tells you adjacent spaces of a space
 
 	private:
 		//data members
-		std::string content[32]; //says what is on the board
 		sf::RenderWindow* window; //ref to game window
 };
