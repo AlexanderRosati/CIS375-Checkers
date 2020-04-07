@@ -297,100 +297,106 @@ PossibleMoves Board::possibleMoves(int spaceNum)
 	char status = content[contentIndx].at(0);
 	char player = content[contentIndx].at(1);
 	char turningDirection = NULL;
-	int jumpFactor = (player == '1') ? -2 : 2;
+	int jumpFactor = NULL;
+	char aboveOrBelow = NULL;
+	std::string orignalContentOfBoard = content[contentIndx];
 	std::vector<int> adjacent;
 	PossibleMoves possibleMoves;
 	PossibleMoves somePossibleMoves;
 
 	adjacent = adjSpaces(status, player, row, contentIndx);
 
-	//its a checker controlled by player one
-	if (status == 'P')
+	//remove piece were examining from board
+	content[contentIndx] = "E";
+
+	//current space
+	int space;
+
+	//iterating through adjacent spaces
+	while (!adjacent.empty())
 	{
-		//current space
-		int space;
+		//get space at end of vector
+		space = adjacent.at(adjacent.size() - 1);
+		adjacent.pop_back();
 
-		//iterating through adjacent spaces
-		while (!adjacent.empty())
+		//if space is empty
+		if (isSpaceEmpty(space + 1))
 		{
-			//get space at end of vector
-			space = adjacent.at(adjacent.size() - 1);
-			adjacent.pop_back();
+			possibleMoves.push_back(std::pair<int, std::vector<int>>(space, std::vector<int>()));
+		}
 
-			//if space is empty
-			if (isSpaceEmpty(space + 1))
-			{
-				possibleMoves.push_back(std::pair<int, std::vector<int>>(space, std::vector<int>()));
-			}
+		//if space contains checker controlled by same player
+		else if (isRightPlayer((int)player, space + 1))
+		{
+			continue;
+		}
 
-			//if space contains checker controlled by same player
-			else if (isRightPlayer((int)player, space + 1))
+		//space is occupied by opponents checker
+		else
+		{
+			//local vars
+			int possibleLandingSpace = 0;
+
+			//opponent is at edge so cannot jump
+			if (isEdgeSpace(space))
 			{
 				continue;
 			}
 
-			//space is occupied by opponents checker
+			//determine whether opponent is above or below
+			if ((contentIndx - space) > 0)
+			{
+				aboveOrBelow = 'A';
+				jumpFactor = -2;
+			}
+
 			else
 			{
-				//local vars
-				int possibleLandingSpace = 0;
+				aboveOrBelow = 'B';
+				jumpFactor = 2;
+			}
 
-				//opponent is at edge so cannot jump
-				if (isEdgeSpace(space))
-				{
-					continue;
-				}
+			//figure out if opponent is to the right or left
+			turningDirection = determineDirection(contentIndx, space, row, aboveOrBelow);
 
-				//figure out if opponent is to the right or left
-				turningDirection = determineDirection(contentIndx, space, row, player);
+			//determine where we may land
+			if (aboveOrBelow == 'A')
+			{
+				if (turningDirection == 'R') possibleLandingSpace = contentIndx - 7;
+				if (turningDirection == 'L') possibleLandingSpace = contentIndx - 9;
+			}
 
-				//determine where we may land
-				if (player == '1')
-				{
-					if (turningDirection == 'R') possibleLandingSpace = contentIndx - 7;
-					if (turningDirection == 'L') possibleLandingSpace = contentIndx - 9;
-				}
+			else if (aboveOrBelow == 'B')
+			{
+				if (turningDirection == 'L') possibleLandingSpace = contentIndx + 7;
+				if (turningDirection == 'R') possibleLandingSpace = contentIndx + 9;
+			}
 
-				else if (player == '2')
-				{
-					if (turningDirection == 'L') possibleLandingSpace = contentIndx + 7;
-					if (turningDirection == 'R') possibleLandingSpace = contentIndx + 9;
-				}
+			//don't add anything b/c landing space is occupied
+			if (!isSpaceEmpty(possibleLandingSpace + 1)) { continue; }
 
-				//don't add anything b/c landing space is occupied
-				if (!isSpaceEmpty(possibleLandingSpace + 1)) { continue; }
+			//determine possible landing positions
+			determineLandingPositions(possibleLandingSpace, status, player, row + jumpFactor, space, &somePossibleMoves, contentIndx);
 
-				//determine possible landing positions
-				determineLandingPositions(possibleLandingSpace, status, player, row + jumpFactor, space, &somePossibleMoves);
 
-				//put all moves into possible moves
-				for (int i = 0; i < somePossibleMoves.size(); ++i)
+			std::vector<int> currLandingSpaces;
+			for (int i = 0; i < possibleMoves.size(); ++i)
+			{
+				currLandingSpaces.push_back(possibleMoves.at(i).first);
+			}
+
+			//put all moves into possible moves
+			for (int i = 0; i < somePossibleMoves.size(); ++i)
+			{
+				if (std::count(currLandingSpaces.begin(), currLandingSpaces.end(), somePossibleMoves.at(i).first) == 0)
 				{
 					possibleMoves.push_back(somePossibleMoves.at(i));
 				}
-
-				//empty somePossibleMoves
-				somePossibleMoves = PossibleMoves();
 			}
+
+			//empty somePossibleMoves
+			somePossibleMoves = PossibleMoves();
 		}
-	}
-
-	//its a checker controlled by player two
-	else if (player == '2' && status == 'P')
-	{
-
-	}
-
-	//its a king controlled by player one
-	else if (player == '1' && status == 'K')
-	{
-
-	}
-
-	//its a king controlled by player two
-	else if (player == '2' && status == 'K')
-	{
-
 	}
 
 	//transalte indexes into values between 1 and 32
@@ -404,23 +410,48 @@ PossibleMoves Board::possibleMoves(int spaceNum)
 		}
 	}
 
+	//remove piece were examining from board
+	content[contentIndx] = orignalContentOfBoard;
+
 	//return possible moves
 	return possibleMoves;
 }
 
 //Description: Determines landing positions
-void Board::determineLandingPositions(int possibleLandingPosition, char status, char player, int row, int opponentSpace, PossibleMoves* somePossibleMoves)
+void Board::determineLandingPositions(int possibleLandingPosition, char status, char player, int row,
+	                                  int opponentSpace, PossibleMoves* somePossibleMoves, int originalPos)
 {
 	//determine adjacent spaces
 	std::vector<int> adjacent;
 	int adjSpace = NULL;
 	char leftOrRight = NULL;
+	char aboveOrBelow = NULL;
 	int anotherPossibleLandingSpace = NULL;
 	bool isLandingSpace = true;
-	int jumpFactor = (player == '1') ? -2 : 2;
+	int jumpFactor = NULL;
+	
+	//we went in a loop i.e., Test 58
+	if (possibleLandingPosition == originalPos)
+	{
+		//add move
+		std::vector<int> tmp;
+		tmp.push_back(opponentSpace);
+		somePossibleMoves->push_back(std::pair<int, std::vector<int>>(possibleLandingPosition, tmp));
+		return;
+	}
 
 	//calcualte adjacent spaces
 	adjacent = adjSpaces(status, player, row, possibleLandingPosition);
+
+	//don't consider space we're going to jump over
+	for (int i = 0; i < adjacent.size(); ++i)
+	{
+		if (adjacent.at(i) == opponentSpace)
+		{
+			adjacent.erase(adjacent.begin() + i);
+			--i;
+		}
+	}
 
 	//iterate through adjacent spaces
 	while (!adjacent.empty())
@@ -450,17 +481,29 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 				continue;
 			}
 
-			//determine whether opponent is to the left of space or right of space
-			leftOrRight = determineDirection(possibleLandingPosition, adjSpace, row, player);
+			if ((possibleLandingPosition - adjSpace) > 0)
+			{
+				aboveOrBelow = 'A';
+				jumpFactor = -2;
+			}
 
-			//determine whether space is empty or not		
-			if (player == '1')
+			else
+			{
+				aboveOrBelow = 'B';
+				jumpFactor = 2;
+			}
+
+			//determine whether opponent is to the left of space or right of space
+			leftOrRight = determineDirection(possibleLandingPosition, adjSpace, row, aboveOrBelow);
+
+			//determine whether space is empty or not
+			if (aboveOrBelow == 'A')
 			{
 				if (leftOrRight == 'R') anotherPossibleLandingSpace = possibleLandingPosition - 7;
 				if (leftOrRight == 'L') anotherPossibleLandingSpace = possibleLandingPosition - 9;
 			}
 			
-			else if (player == '2')
+			else if (aboveOrBelow == 'B')
 			{
 				if (leftOrRight == 'L') anotherPossibleLandingSpace = possibleLandingPosition + 7;
 				if (leftOrRight == 'R') anotherPossibleLandingSpace = possibleLandingPosition + 9;
@@ -472,7 +515,7 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 			isLandingSpace = false;
 
 			//recursive call
-			determineLandingPositions(anotherPossibleLandingSpace, status, player, row + jumpFactor, adjSpace, somePossibleMoves);
+			determineLandingPositions(anotherPossibleLandingSpace, status, player, row + jumpFactor, adjSpace, somePossibleMoves, originalPos);
 
 			//adding checkers to remove for certain moves
 			for (int i = 0; i < somePossibleMoves->size(); ++i)
@@ -495,14 +538,14 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 }
 
 //Description: figure out if opponent is to the left or right
-char Board::determineDirection(int spaceNum, int opponentNum, int row, char player)
+char Board::determineDirection(int spaceNum, int opponentNum, int row, char aboveOrBelow)
 {
 	//local vars
 	int diff = abs(spaceNum - opponentNum);
 	char dir = NULL;
 
 	//if its player one
-	if (player == '1')
+	if (aboveOrBelow == 'A')
 	{
 		//break it down by row on board
 		switch (row)
@@ -526,7 +569,7 @@ char Board::determineDirection(int spaceNum, int opponentNum, int row, char play
 	}
 
 	//if its player two
-	else if (player == '2')
+	else if (aboveOrBelow == 'B')
 	{
 		switch (row)
 		{

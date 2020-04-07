@@ -279,4 +279,139 @@ void possibleMovesTestDriver()
 	result = doTest(std::vector<int> {13}, std::vector<int> {9}, 9);
 	std::cout << "Test 30: " << result << std::endl;
 	assert(result == "<(14, <>)>");
+
+	//Test 31
+	result = doTest(std::vector<int> {-14}, std::vector<int> {}, 14);
+	std::cout << "Test 31: " << result << std::endl;
+	assert(result == "<(9, <>)(10, <>)(17, <>)(18, <>)>");
+
+	//Test 32
+	result = doTest(std::vector<int> {}, std::vector<int> {-14}, 14);
+	std::cout << "Test 32: " << result << std::endl;
+	assert(result == "<(9, <>)(10, <>)(17, <>)(18, <>)>");
+
+	//Test 33
+	result = doTest(std::vector<int> {-29}, std::vector<int> {}, 29);
+	std::cout << "Test 33: " << result << std::endl;
+	assert(result == "<(25, <>)>");
+
+	//Test 34
+	result = doTest(std::vector<int> {}, std::vector<int> {-4}, 4);
+	std::cout << "Test 34: " << result << std::endl;
+	assert(result == "<(8, <>)>");
+
+	//Test 35
+	result = doTest(std::vector<int> {6, -10}, std::vector<int> {}, 10);
+	std::cout << "Test 35: " << result << std::endl;
+	assert(result == "<(7, <>)(14, <>)(15, <>)>");
+
+	//Test 36
+	result = doTest(std::vector<int> {6, 7, -10}, std::vector<int> {}, 10);
+	std::cout << "Test 36: " << result << std::endl;
+	assert(result == "<(14, <>)(15, <>)>");
+
+	//Test 37
+	result = doTest(std::vector<int> {6, 7, 14, -10}, std::vector<int> {}, 10);
+	std::cout << "Test 37: " << result << std::endl;
+	assert(result == "<(15, <>)>");
+
+	//Test 38
+	result = doTest(std::vector<int> {-18}, std::vector<int> {14, 15, 22, 23}, 18);
+	std::cout << "Test 38: " << result << std::endl;
+	assert(result == "<(9, <14>)(11, <15>)(25, <22>)(27, <23>)>");
+
+	//Test 39
+	result = doTest(std::vector<int> {14, 15, 22, 23}, std::vector<int> {-18}, 18);
+	std::cout << "Test 39: " << result << std::endl;
+	assert(result == "<(9, <14>)(11, <15>)(25, <22>)(27, <23>)>");
+
+	//Test 40
+	result = doTest(std::vector<int> {-17}, std::vector<int> {14, 15}, 17);
+	std::cout << "Test 40: " << result << std::endl;
+	assert(result == "<(13, <>)(19, <14, 15>)(21, <>)(22, <>)>");
+
+	//Test 41
+	result = doTest(std::vector<int> {8, 15, 18}, std::vector<int> {-4}, 4);
+	std::cout << "Test 41: " << result << std::endl;
+	assert(result == "<(11, <8>)>");
+
+	//Test 42
+	result = doTest(std::vector<int> {-7}, std::vector<int> {10, 17}, 7);
+	std::cout << "Test 42: " << result << std::endl;
+	assert(result == "<(2, <>)(3, <>)(11, <>)(21, <10, 17>)>");
+
+	//Test 43
+	result = doTest(std::vector<int> {15, 16, 23}, std::vector<int> {-26}, 26);
+	std::cout << "Test 43: " << result << std::endl;
+	assert(result == "<(10, <15, 23>)(12, <16, 23>)(22, <>)(30, <>)(31, <>)>");
+
+	//Test 44
+	result = doTest(std::vector<int> {-29}, std::vector<int> {25, 18, 11}, 29);
+	std::cout << "Test 44: " << result << std::endl;
+	assert(result == "<(8, <11, 18, 25>)>");
+
+	//Test 45
+	result = doTest(std::vector<int> {-4}, std::vector<int> {8, 15, 22}, 4);
+	std::cout << "Test 45: " << result << std::endl;
+	assert(result == "<(25, <8, 15, 22>)>");
+
+	//Test 46
+	result = doTest(std::vector<int> {-13}, std::vector<int> {}, 13);
+	std::cout << "Test 46: " << result << std::endl;
+	assert(result == "<(9, <>)(17, <>)>");
+
+	//Test 47
+	result = doTest(std::vector<int> {}, std::vector<int> {-13}, 13);
+	std::cout << "Test 47: " << result << std::endl;
+	assert(result == "<(9, <>)(17, <>)>");
+
+	//Test 48
+	result = doTest(std::vector<int> {-4}, std::vector<int> {8, 15, 22, 25}, 4);
+	std::cout << "Test 48: " << result << std::endl;
+	assert(result == "<(18, <8, 15>)>");
+
+	//Test 49
+	result = doTest(std::vector<int> {26}, std::vector<int> {23, 15}, 26);
+	std::cout << "Test 49: " << result << std::endl;
+	assert(result == "<(10, <15, 23>)(22, <>)>");
+
+	//Test 50
+	result = doTest(std::vector<int> {10, 18}, std::vector<int> {7}, 7);
+	std::cout << "Test 50: " << result << std::endl;
+	assert(result == "<(11, <>)(23, <10, 18>)>");
+
+	//Test 52
+	result = doTest(std::vector<int> {-15}, std::vector<int> {10}, 10);
+	std::cout << "Test 52: " << result << std::endl;
+	assert(result == "<(14, <>)(19, <15>)>");
+
+	//Test 53
+	result = doTest(std::vector<int> {18}, std::vector<int> {22}, 18);
+	std::cout << "Test 53: " << result << std::endl;
+	assert(result == "<(14, <>)(15, <>)>");
+
+	//Test 54
+	result = doTest(std::vector<int> {10}, std::vector<int> {15}, 15);
+	std::cout << "Test 54: " << result << std::endl;
+	assert(result == "<(18, <>)(19, <>)>");
+
+	//Test 55
+	result = doTest(std::vector<int> {-22}, std::vector<int> {-26, -27}, 22);
+	std::cout << "Test 55: " << result << std::endl;
+	assert(result == "<(17, <>)(18, <>)(24, <26, 27>)(25, <>)>");
+
+	//Test 56
+	result = doTest(std::vector<int> {-2}, std::vector<int> {-6, -7, -14, -15}, 2);
+	std::cout << "Test 56: " << result << std::endl;
+	assert(result == "<(2, <6, 7, 14, 15>)>");
+
+	//Test 57
+	result = doTest(std::vector<int> {-2}, std::vector<int> {}, 2);
+	std::cout << "Test 57: " << result << std::endl;
+	assert(result == "<(6, <>)(7, <>)>");
+
+	//Test 58
+	result = doTest(std::vector<int> {}, std::vector<int> {-30}, 30);
+	std::cout << "Test 58: " << result << std::endl;
+	assert(result == "<(25, <>)(26, <>)>");
 }
