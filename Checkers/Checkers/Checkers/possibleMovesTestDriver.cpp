@@ -1,28 +1,212 @@
-#include "Board.h";
+#include "Board.h"
+#include <assert.h>
 #include <iostream>
+
+std::string turnPossibleMovesToString(PossibleMoves pm)
+{
+	std::string str = "<";
+	std::pair<int, std::vector<int>> pair;
+	int removePos = NULL;
+
+	while (!pm.empty())
+	{
+		pair = pm.at(0);
+		str += "(" + std::to_string(pair.first) + ", <";
+
+		while (!pair.second.empty())
+		{
+			if (pair.second.size() == 1)
+			{
+				removePos = pair.second.at(0);
+				pair.second.erase(pair.second.begin());
+				str += std::to_string(removePos);
+			}
+
+			else
+			{
+				removePos = pair.second.at(0);
+				pair.second.erase(pair.second.begin());
+				str += std::to_string(removePos) + ", ";
+			}
+		}
+
+		str += ">)";
+		pm.erase(pm.begin());
+	}
+
+
+	str += ">";
+	return str;
+}
+
+std::string doTest(std::vector<int> playerOne, std::vector<int> playerTwo, int movingPiece)
+{
+	Board testBoard;
+
+	//make every space empty
+	for (int i = 0; i < 32; ++i) testBoard.content[i] = "E";
+
+	//put player one pieces on board
+	for (int i = 0; i < playerOne.size(); ++i)
+	{
+		if (playerOne.at(i) < 0)
+		{
+			testBoard.content[abs(playerOne.at(i)) - 1] = "K1";
+		}
+
+		else
+		{
+			testBoard.content[playerOne.at(i) - 1] = "P1";
+		}
+	}
+
+	//put player two pieces on board
+	for (int i = 0; i < playerTwo.size(); ++i)
+	{
+		if (playerTwo.at(i) < 0)
+		{
+			testBoard.content[abs(playerTwo.at(i)) - 1] = "K2";
+		}
+
+		else
+		{
+			testBoard.content[playerTwo.at(i) - 1] = "P2";
+		}
+	}
+
+	//calculate possible moves for checker at movingPiece
+	PossibleMoves possibleMoves = testBoard.possibleMoves(movingPiece);
+
+
+	//sort moves
+	int minIndx = 0;
+
+	//order pairs by space to be moved to
+	for (int i = 0; i < (int) (possibleMoves.size() - 1); ++i)
+	{
+		minIndx = i;
+
+		for (int j = i + 1; j < possibleMoves.size(); ++j)
+		{
+			if (possibleMoves.at(minIndx).first > possibleMoves.at(j).first)
+			{
+				minIndx = j;
+			}
+		}
+
+		std::swap(possibleMoves.at(minIndx), possibleMoves.at(i));
+	}
+
+	//reset minIndx
+	minIndx = 0;
+
+	//order spaces to remove for each pair
+	for (int i = 0; i < possibleMoves.size(); ++i)
+	{
+		for (int j = 0; j < (int) (possibleMoves.at(i).second.size() - 1); ++j)
+		{
+			minIndx = j;
+
+			for (int k = j + 1; k < possibleMoves.at(i).second.size(); ++k)
+			{
+				if (possibleMoves.at(i).second.at(minIndx) > possibleMoves.at(i).second.at(k))
+				{
+					minIndx = k;
+				}
+			}
+
+			std::swap(possibleMoves.at(i).second.at(minIndx), possibleMoves.at(i).second.at(j));
+		}
+	}
+
+	//convert result to string
+	std::string possibleMovesStr = turnPossibleMovesToString(possibleMoves);
+
+	//return string
+	return possibleMovesStr;
+}
 
 void possibleMovesTestDriver()
 {
-	Board board;
-	std::vector<int> adjSpaces;
-	
-	for (int i = 0; i < 32; ++i)
-	{
-		board.content[i] = "K1";
-	}
+	std::string result;
 
-	for (int i = 0; i < 32; ++i)
-	{
-		std::cout << "Space Num: " << i + 1 << " Adj Spaces: ";
-		adjSpaces = board.adjSpaces('K', '1', i / 4, i);
-		for (int i = 0; i < adjSpaces.size(); ++i) adjSpaces.at(i) += 1;
-		
-		for (int i = 0; i < adjSpaces.size(); ++i)
-		{
-			std::cout << adjSpaces.at(i) << " ";
-		}
+	//Test 1
+	result = doTest(std::vector<int> {22}, std::vector<int>(), 22);
+	std::cout << "Test 1: " << result << std::endl;
+	assert(result == "<(17, <>)(18, <>)>");
 
-		std::cout << std::endl;
-		system("pause");
-	}
+	//Test 2
+	result = doTest(std::vector<int> {20}, std::vector<int>(), 20);
+	std::cout << "Test 2: " << result << std::endl;
+	assert(result == "<(16, <>)>");
+
+	//Test 3
+	result = doTest(std::vector<int> {22}, std::vector<int> {18, 15}, 22);
+	std::cout << "Test 3: " << result << std::endl;
+	assert(result == "<(17, <>)>");
+
+	//Test 4
+	result = doTest(std::vector<int> {30}, std::vector<int> {26, 19}, 30);
+	std::cout << "Test 4: " << result << std::endl;
+	assert(result == "<(16, <19, 26>)(25, <>)>");
+
+	//Test 5
+	result = doTest(std::vector<int> {22}, std::vector<int> {18, 10, 11}, 22);
+	std::cout << "Test 5: " << result << std::endl;
+	assert(result == "<(6, <10, 18>)(8, <11, 18>)(17, <>)>");
+
+	//Test 6
+	result = doTest(std::vector<int> {29}, std::vector<int> {25, 18, 11}, 29);
+	std::cout << "Test 6: " << result << std::endl;
+	assert(result == "<(8, <11, 18, 25>)>");
+
+	//Test 7
+	result = doTest(std::vector<int> {29}, std::vector<int> {25, 18, 10, 11}, 29);
+	std::cout << "Test 7: " << result << std::endl;
+	assert(result == "<(6, <10, 18, 25>)(8, <11, 18, 25>)>");
+
+	//Test 8
+	result = doTest(std::vector<int> {26, 22, 23}, std::vector<int>(), 26);
+	std::cout << "Test 8: " << result << std::endl;
+	assert(result == "<>");
+
+	//Test 9
+	result = doTest(std::vector<int> {26, 23}, std::vector<int>(), 26);
+	std::cout << "Test 9: " << result << std::endl;
+	assert(result == "<(22, <>)>");
+
+	//Test 10
+	result = doTest(std::vector<int> {22}, std::vector<int> {18, 11, 8}, 22);
+	std::cout << "Test 10: " << result << std::endl;
+	assert(result == "<(15, <18>)(17, <>)>");
+
+	//Test 11
+	result = doTest(std::vector<int> {29}, std::vector<int> {25, 18, 11, 8}, 29);
+	std::cout << "Test 11: " << result << std::endl;
+	assert(result == "<(15, <18, 25>)>");
+
+	//Test 12
+	result = doTest(std::vector<int> {6}, std::vector<int> {1, 2}, 6);
+	std::cout << "Test 12: " << result << std::endl;
+	assert(result == "<>");
+
+	//Test 13
+	result = doTest(std::vector<int> {22}, std::vector<int> {17, 18}, 22);
+	std::cout << "Test 13: " << result << std::endl;
+	assert(result == "<(13, <17>)(15, <18>)>");
+
+	//Test 14
+	result = doTest(std::vector<int> {23}, std::vector<int> {18, 19, 9}, 23);
+	std::cout << "Test 14: " << result << std::endl;
+	assert(result == "<(5, <9, 18>)(16, <19>)>");
+
+	//Test 15
+	result = doTest(std::vector<int> {10}, std::vector<int> {6, 7}, 10);
+	std::cout << "Test 15: " << result << std::endl;
+	assert(result == "<(1, <6>)(3, <7>)>");
+
+	//Test 16
+	result = doTest(std::vector<int> {26}, std::vector<int> {22, 23, 15, 16}, 26);
+	std::cout << "Test 16: " << result << std::endl;
+	assert(result == "<(10, <15, 23>)(12, <16, 23>)(17, <22>)>");
 }
