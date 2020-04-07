@@ -279,8 +279,6 @@ std::vector<int> Board::adjSpaces(char status, char player, int row, int content
 					adjSpaces.push_back(contentIndx - 4);
 					adjSpaces.push_back(contentIndx - 5);
 				}
-
-break;
 		}
 	}
 
@@ -299,6 +297,7 @@ PossibleMoves Board::possibleMoves(int spaceNum)
 	char status = content[contentIndx].at(0);
 	char player = content[contentIndx].at(1);
 	char turningDirection = NULL;
+	int jumpFactor = (player == '1') ? -2 : 2;
 	std::vector<int> adjacent;
 	PossibleMoves possibleMoves;
 	PossibleMoves somePossibleMoves;
@@ -306,7 +305,7 @@ PossibleMoves Board::possibleMoves(int spaceNum)
 	adjacent = adjSpaces(status, player, row, contentIndx);
 
 	//its a checker controlled by player one
-	if (player == '1' && status == 'P')
+	if (status == 'P')
 	{
 		//current space
 		int space;
@@ -337,24 +336,32 @@ PossibleMoves Board::possibleMoves(int spaceNum)
 				int possibleLandingSpace = 0;
 
 				//opponent is at edge so cannot jump
-				if (space == 0 || space == 1 || space == 2 || space == 3 || space == 11 ||
-					space == 19 || space == 27 || space == 20 || space == 12 || space == 4)
+				if (isEdgeSpace(space))
 				{
 					continue;
 				}
 
 				//figure out if opponent is to the right or left
-				turningDirection = determineDirection(contentIndx, space, row);
+				turningDirection = determineDirection(contentIndx, space, row, player);
 
 				//determine where we may land
-				if (turningDirection == 'R') { possibleLandingSpace = contentIndx - 7; }
-				if (turningDirection == 'L') { possibleLandingSpace = contentIndx - 9; }
+				if (player == '1')
+				{
+					if (turningDirection == 'R') possibleLandingSpace = contentIndx - 7;
+					if (turningDirection == 'L') possibleLandingSpace = contentIndx - 9;
+				}
+
+				else if (player == '2')
+				{
+					if (turningDirection == 'L') possibleLandingSpace = contentIndx + 7;
+					if (turningDirection == 'R') possibleLandingSpace = contentIndx + 9;
+				}
 
 				//don't add anything b/c landing space is occupied
 				if (!isSpaceEmpty(possibleLandingSpace + 1)) { continue; }
 
 				//determine possible landing positions
-				determineLandingPositions(possibleLandingSpace, status, player, row - 2, space, &somePossibleMoves);
+				determineLandingPositions(possibleLandingSpace, status, player, row + jumpFactor, space, &somePossibleMoves);
 
 				//put all moves into possible moves
 				for (int i = 0; i < somePossibleMoves.size(); ++i)
@@ -410,6 +417,7 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 	char leftOrRight = NULL;
 	int anotherPossibleLandingSpace = NULL;
 	bool isLandingSpace = true;
+	int jumpFactor = (player == '1') ? -2 : 2;
 
 	//calcualte adjacent spaces
 	adjacent = adjSpaces(status, player, row, possibleLandingPosition);
@@ -437,25 +445,34 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 		else
 		{
 			//opponent checker is on edge
-			if (adjSpace == 0 || adjSpace == 1 || adjSpace == 2 || adjSpace == 3 || adjSpace == 11 ||
-				adjSpace == 19 || adjSpace == 27 || adjSpace == 20 || adjSpace == 12 || adjSpace == 4)
+			if (isEdgeSpace(adjSpace))
 			{
 				continue;
 			}
 
 			//determine whether opponent is to the left of space or right of space
-			leftOrRight = determineDirection(possibleLandingPosition, adjSpace, row);
+			leftOrRight = determineDirection(possibleLandingPosition, adjSpace, row, player);
 
-			//determine whether space is empty or not
-			if (leftOrRight == 'R') anotherPossibleLandingSpace = possibleLandingPosition - 7;
-			if (leftOrRight == 'L') anotherPossibleLandingSpace = possibleLandingPosition - 9;
+			//determine whether space is empty or not		
+			if (player == '1')
+			{
+				if (leftOrRight == 'R') anotherPossibleLandingSpace = possibleLandingPosition - 7;
+				if (leftOrRight == 'L') anotherPossibleLandingSpace = possibleLandingPosition - 9;
+			}
+			
+			else if (player == '2')
+			{
+				if (leftOrRight == 'L') anotherPossibleLandingSpace = possibleLandingPosition + 7;
+				if (leftOrRight == 'R') anotherPossibleLandingSpace = possibleLandingPosition + 9;
+			}
+
 			if (!isSpaceEmpty(anotherPossibleLandingSpace + 1)) { continue; }
 
 			//possibleLandingPostion is not a landing position
 			isLandingSpace = false;
 
 			//recursive call
-			determineLandingPositions(anotherPossibleLandingSpace, status, player, row - 2, adjSpace, somePossibleMoves);
+			determineLandingPositions(anotherPossibleLandingSpace, status, player, row + jumpFactor, adjSpace, somePossibleMoves);
 
 			//adding checkers to remove for certain moves
 			for (int i = 0; i < somePossibleMoves->size(); ++i)
@@ -478,21 +495,24 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 }
 
 //Description: figure out if opponent is to the left or right
-char Board::determineDirection(int spaceNum, int opponentNum, int row)
+char Board::determineDirection(int spaceNum, int opponentNum, int row, char player)
 {
 	//local vars
 	int diff = abs(spaceNum - opponentNum);
 	char dir = NULL;
 
-	//break it down by row on board
-	switch (row)
+	//if its player one
+	if (player == '1')
 	{
+		//break it down by row on board
+		switch (row)
+		{
 		case 7:
 		case 5:
 		case 3:
 			if (diff == 5) dir = 'L';
 			if (diff == 4) dir = 'R';
-			
+
 			break;
 
 		case 6:
@@ -502,6 +522,29 @@ char Board::determineDirection(int spaceNum, int opponentNum, int row)
 			if (diff == 3) dir = 'R';
 
 			break;
+		}
+	}
+
+	//if its player two
+	else if (player == '2')
+	{
+		switch (row)
+		{
+			case 0:
+			case 2:
+			case 4:
+				if (diff == 4) dir = 'L';
+				if (diff == 5) dir = 'R';
+
+				break;
+			case 1:
+			case 3:
+			case 5:
+				if (diff == 3) dir = 'L';
+				if (diff == 4) dir = 'R';
+
+				break;
+		}
 	}
 
 	return dir;
@@ -556,4 +599,13 @@ Board::Board()
 void Board::drawBoard()
 {
 
+}
+
+//Description: Returns true if given number is edge space. Expects between 0-31.
+bool Board::isEdgeSpace(int spaceNum)
+{
+	return (spaceNum == 0) || (spaceNum == 1) || (spaceNum == 2) || (spaceNum == 3) ||
+		(spaceNum == 11) || (spaceNum == 19) || (spaceNum == 27) || (spaceNum == 31) ||
+		(spaceNum == 30) || (spaceNum == 29) || (spaceNum == 28) || (spaceNum == 20) ||
+		(spaceNum == 12) || (spaceNum == 4);
 }

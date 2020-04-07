@@ -38,6 +38,7 @@ private:
 	//data members
 	sf::RenderWindow* window; //ref to game window
 	std::vector<int> adjSpaces(char, char, int, int); //tells you adjacent spaces of a space
-	char determineDirection(int, int, int); //determine which direction opponent is
+	char determineDirection(int, int, int, char); //determine which direction opponent is
 	void Board::determineLandingPositions(int, char, char, int, int, PossibleMoves*); //determines landing positions
+	bool isEdgeSpace(int); //returns true if given space is an edge space
 };
