@@ -15,10 +15,15 @@ class Board
 public:
 	//data members
 	sf::Sprite playerOneCheckerImg; //image for player one's checker
+	sf::Texture texturePlayerOneChecker; //texture for player one checker
 	sf::Sprite playerTwoCheckerImg; //image for player two's checker
+	sf::Texture texturePlayerTwoChecker; //texture for player two checker
 	sf::Sprite playerOneKingImg; //image for player one's king
+	sf::Texture texturePlayerOneKing; //texture for player one king
 	sf::Sprite playerTwoKingImg; //image for player two's king
+	sf::Texture texturePlayerTwoKing; //texture for player two king
 	sf::Sprite boardImage; //image for the board
+	sf::Texture textureBoard; //texture for board
 	SoundBoard* soundBoard; //ref to sound board
 	std::string content[32]; //says what is on the board
 
@@ -32,11 +37,9 @@ public:
 	void resetBoard(); //resets game board
 	bool canPlayerMove(int); //determines if a player can move
 	void kingMe(int); //kings a checker
+	Board() {} //worthless default constructor. DO NOT USE.
 	Board(SoundBoard*); //constructor
 	void drawBoard(); //draws board
-
-	//worthless default constructor
-	Board() { std::cout << "Default constructor for Board used. Did you mean to do this?" << std::endl; }
 
 private:
 	//data members

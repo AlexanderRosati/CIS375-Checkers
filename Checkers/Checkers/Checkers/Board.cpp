@@ -625,10 +625,8 @@ void Board::kingMe(int spaceNum)
 //Description: constructor
 Board::Board(SoundBoard* refToSoundBoard)
 {
-	sf::Texture textureObject;
-
 	//load player one regular checker into memory
-	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-one-checker-customization1.png"))
+	if (!texturePlayerOneChecker.loadFromFile("../../IMAGES/customizations/customization1/player-one-checker-customization1.png"))
 	{
 		std::cout << "Player one checker image did not load for customization 1. Exiting program" << std::endl;
 		system("pause");
@@ -638,11 +636,11 @@ Board::Board(SoundBoard* refToSoundBoard)
 	//assign sprite a texture
 	else
 	{
-		playerOneCheckerImg.setTexture(textureObject);
+		playerOneCheckerImg.setTexture(texturePlayerOneChecker);
 	}
 
 	//load player two regular checker into memory
-	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-two-checker-customization1.png"))
+	if (!texturePlayerTwoChecker.loadFromFile("../../IMAGES/customizations/customization1/player-two-checker-customization1.png"))
 	{
 		std::cout << "Player two checker image did not load for customization 1. Exiting program." << std::endl;
 		system("pause");
@@ -652,11 +650,11 @@ Board::Board(SoundBoard* refToSoundBoard)
 	//assign sprite a texture
 	else
 	{
-		playerTwoCheckerImg.setTexture(textureObject);
+		playerTwoCheckerImg.setTexture(texturePlayerTwoChecker);
 	}
 
 	//load player one king image into memory
-	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-one-king-custmization1.png"))
+	if (!texturePlayerOneKing.loadFromFile("../../IMAGES/customizations/customization1/player-one-king-custmization1.png"))
 	{
 		std::cout << "Player one king image did not load for customization 1. Exiting program." << std::endl;
 		system("pause");
@@ -666,11 +664,11 @@ Board::Board(SoundBoard* refToSoundBoard)
 	//assign sprite a texture
 	else
 	{
-		playerOneKingImg.setTexture(textureObject);
+		playerOneKingImg.setTexture(texturePlayerOneKing);
 	}
 
 	//load player two king image into memory
-	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-two-king-customization1.png"))
+	if (!texturePlayerTwoKing.loadFromFile("../../IMAGES/customizations/customization1/player-two-king-customization1.png"))
 	{
 		std::cout << "Player two king image did not load for customization 1. Exiting program." << std::endl;
 		system("pause");
@@ -680,11 +678,11 @@ Board::Board(SoundBoard* refToSoundBoard)
 	//assign sprite a texture
 	else
 	{
-		playerTwoKingImg.setTexture(textureObject);
+		playerTwoKingImg.setTexture(texturePlayerTwoKing);
 	}
 
 	//load board image into memory
-	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/board-customization1.png"))
+	if (!textureBoard.loadFromFile("../../IMAGES/customizations/customization1/board-customization1.png"))
 	{
 		std::cout << "Board image for customization 1 did not load. Exiting program." << std::endl;
 		system("pause");
@@ -694,7 +692,7 @@ Board::Board(SoundBoard* refToSoundBoard)
 	//assign sprite texture
 	else
 	{
-		boardImage.setTexture(textureObject);
+		boardImage.setTexture(textureBoard);
 	}
 
 	//keep reference to sound board object

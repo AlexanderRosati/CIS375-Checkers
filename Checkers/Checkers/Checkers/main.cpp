@@ -23,7 +23,6 @@ enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen
 
 int main()
 {
-	boardClassTestDriver();
 	gameLoop();
 	//testDriver();
 }
@@ -39,7 +38,7 @@ void gameLoop()
 	Game game; //object for game screen
 	MusicSelectionMenu musicSelectionMenu; //object for music selection menu
 	SoundBoard soundBoard; //contains all sound objects
-	TitleMenu titleMenu; //object for title menu
+	TitleMenu titleMenu(&window, &soundBoard); //object for title menu
 	Tutorial tutorial; //object for tutorial
 	VictoryScreen victoryScreen; //object for victory screen
 	
