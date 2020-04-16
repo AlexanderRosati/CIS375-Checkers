@@ -42,7 +42,7 @@
     <ClCompile Include="CustomizationMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="possibleMovesTestDriver.cpp">
+    <ClCompile Include="boardClassTestDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

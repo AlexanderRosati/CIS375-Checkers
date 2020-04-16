@@ -41,7 +41,7 @@ std::string turnPossibleMovesToString(PossibleMoves pm)
 
 std::string doTest(std::vector<int> playerOne, std::vector<int> playerTwo, int movingPiece)
 {
-	Board testBoard;
+	Board testBoard(NULL);
 
 	//make every space empty
 	for (int i = 0; i < 32; ++i) testBoard.content[i] = "E";
@@ -126,7 +126,7 @@ std::string doTest(std::vector<int> playerOne, std::vector<int> playerTwo, int m
 	return possibleMovesStr;
 }
 
-void possibleMovesTestDriver()
+void boardClassTestDriver()
 {
 	std::string result;
 
@@ -414,4 +414,15 @@ void possibleMovesTestDriver()
 	result = doTest(std::vector<int> {}, std::vector<int> {-30}, 30);
 	std::cout << "Test 58: " << result << std::endl;
 	assert(result == "<(25, <>)(26, <>)>");
+
+	//Test 59
+	Board myBoard(NULL);
+	std::cout << "Test 59:" << std::endl;
+
+	for (int i = 1; i < 33; ++i)
+	{
+		std::cout << "Remove checker at " << i << std::endl;
+		myBoard.removeChecker(i);
+		assert(myBoard.content[i - 1] == "E");
+	}
 }

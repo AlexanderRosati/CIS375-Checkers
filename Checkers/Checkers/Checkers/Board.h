@@ -6,6 +6,7 @@
 #include "SoundBoard.h"
 #include <vector>
 #include <utility>
+#include <iostream>
 
 typedef std::vector<std::pair<int, std::vector<int>>> PossibleMoves;
 
@@ -31,8 +32,11 @@ public:
 	void resetBoard(); //resets game board
 	bool canPlayerMove(int); //determines if a player can move
 	void kingMe(int); //kings a checker
-	Board(); //constructor
+	Board(SoundBoard*); //constructor
 	void drawBoard(); //draws board
+
+	//worthless default constructor
+	Board() { std::cout << "Default constructor for Board used. Did you mean to do this?" << std::endl; }
 
 private:
 	//data members

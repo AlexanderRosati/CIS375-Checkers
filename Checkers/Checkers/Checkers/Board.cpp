@@ -16,18 +16,8 @@ bool Board::isSpaceEmpty(int spaceNum)
 //Description: Returns true if the checker on spaceNum is controlled by player 'playerNum'.
 bool Board::isRightPlayer(int playerNum, int spaceNum)
 {
-
 	return content[spaceNum - 1].at(1) == (char) playerNum;
 }
-
-//Precondition: spaceNum has a checker on it.
-//Description: Determines if checker can move
-bool Board::canCheckerMove(int spaceNum)
-{
-	//temporary please delete
-	return true;
-}
-
 
 //Description: returns adjacent spaces. helper method of possibleMoves
 std::vector<int> Board::adjSpaces(char status, char player, int row, int contentIndx)
@@ -596,7 +586,7 @@ char Board::determineDirection(int spaceNum, int opponentNum, int row, char abov
 //Desciption: Removes a checker from the board by putting an "E" at that index.
 void Board::removeChecker(int spaceNum)
 {
-
+	content[spaceNum - 1] = "E";
 }
 
 //Precondition: spaceNum must contain a checker, whereTo does not contain a checker
@@ -633,9 +623,93 @@ void Board::kingMe(int spaceNum)
 }
 
 //Description: constructor
-Board::Board()
+Board::Board(SoundBoard* refToSoundBoard)
 {
+	sf::Texture textureObject;
 
+	//load player one regular checker into memory
+	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-one-checker-customization1.png"))
+	{
+		std::cout << "Player one checker image did not load for customization 1. Exiting program" << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	//assign sprite a texture
+	else
+	{
+		playerOneCheckerImg.setTexture(textureObject);
+	}
+
+	//load player two regular checker into memory
+	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-two-checker-customization1.png"))
+	{
+		std::cout << "Player two checker image did not load for customization 1. Exiting program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	//assign sprite a texture
+	else
+	{
+		playerTwoCheckerImg.setTexture(textureObject);
+	}
+
+	//load player one king image into memory
+	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-one-king-custmization1.png"))
+	{
+		std::cout << "Player one king image did not load for customization 1. Exiting program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	//assign sprite a texture
+	else
+	{
+		playerOneKingImg.setTexture(textureObject);
+	}
+
+	//load player two king image into memory
+	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/player-two-king-customization1.png"))
+	{
+		std::cout << "Player two king image did not load for customization 1. Exiting program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	//assign sprite a texture
+	else
+	{
+		playerTwoKingImg.setTexture(textureObject);
+	}
+
+	//load board image into memory
+	if (!textureObject.loadFromFile("../../IMAGES/customizations/customization1/board-customization1.png"))
+	{
+		std::cout << "Board image for customization 1 did not load. Exiting program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	//assign sprite texture
+	else
+	{
+		boardImage.setTexture(textureObject);
+	}
+
+	//keep reference to sound board object
+	soundBoard = refToSoundBoard;
+
+	//put checkers on board
+	for (int i = 0; i < 12; ++i)
+	{
+		content[i] = "P2";
+	}
+
+	for (int i = 20; i < 32; ++i)
+	{
+		content[i] = "P1";
+	}
 }
 
 //Description: should draw the game board and all the pieces

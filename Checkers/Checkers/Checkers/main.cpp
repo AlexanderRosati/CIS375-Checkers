@@ -15,6 +15,7 @@
 //prototypes
 void gameLoop();
 void testDriver();
+void boardClassTestDriver();
 
 //enum
 enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen,
@@ -22,6 +23,7 @@ enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen
 
 int main()
 {
+	boardClassTestDriver();
 	gameLoop();
 	//testDriver();
 }
