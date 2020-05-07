@@ -48,6 +48,9 @@ void gameLoop()
 	wholeScreen.setSize(sf::Vector2f(600, 600));
 	wholeScreen.setFillColor(BABY_BLUE);
 
+	//play sound effect for title
+	soundBoard.play("letsa-play");
+
 	//set enum
 	whatsDisplaying = TitleScreen;
 
