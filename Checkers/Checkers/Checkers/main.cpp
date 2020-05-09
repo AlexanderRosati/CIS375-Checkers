@@ -22,7 +22,6 @@ enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen
 
 int main()
 {
-	boardClassTestDriver();
 	gameLoop();
 }
 
@@ -33,9 +32,9 @@ void gameLoop()
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Checkers"); //game window
 	sf::Event event; //event object
 	Screen whatsDisplaying; //keep track of which screen is displaying
-	CustomizationMenu customizationMenu; //customization menu object
-	MusicSelectionMenu musicSelectionMenu; //object for music selection menu
 	SoundBoard soundBoard; //contains all sound objects
+	CustomizationMenu customizationMenu; //customization menu object
+	MusicSelectionMenu musicSelectionMenu(&soundBoard, &window); //object for music selection menu
 	TitleMenu titleMenu(&window, &soundBoard); //object for title menu
 	Tutorial tutorial; //object for tutorial
 	VictoryScreen victoryScreen; //object for victory screen
@@ -52,7 +51,7 @@ void gameLoop()
 	soundBoard.play("letsa-play");
 
 	//set enum
-	whatsDisplaying = TitleScreen;
+	whatsDisplaying = MusicSelectionScreen;
 
 	//game loop; loops as long as game window is open
 	while (window.isOpen())
