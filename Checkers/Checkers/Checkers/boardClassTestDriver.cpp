@@ -41,7 +41,7 @@ std::string turnPossibleMovesToString(PossibleMoves pm)
 
 std::string doTest(std::vector<int> playerOne, std::vector<int> playerTwo, int movingPiece)
 {
-	Board testBoard(NULL);
+	Board testBoard(NULL, NULL);
 
 	//make every space empty
 	for (int i = 0; i < 32; ++i) testBoard.content[i] = "E";
@@ -416,13 +416,45 @@ void boardClassTestDriver()
 	assert(result == "<(25, <>)(26, <>)>");
 
 	//Test 59
-	Board myBoard(NULL);
+	Board myBoard1(NULL, NULL);
 	std::cout << "Test 59:" << std::endl;
 
 	for (int i = 1; i < 33; ++i)
 	{
 		std::cout << "Remove checker at " << i << std::endl;
-		myBoard.removeChecker(i);
-		assert(myBoard.content[i - 1] == "E");
+		myBoard1.removeChecker(i);
+		assert(myBoard1.content[i - 1] == "E");
 	}
+
+	//Test 60
+	Board myBoard2(NULL, NULL);
+	myBoard2.emptyBoard();
+	myBoard2.content[31] = "P1";
+	myBoard2.content[26] = "P2";
+	myBoard2.content[27] = "P2";
+	assert(myBoard2.canPlayerMove(1), false);
+	std::cout << "Test 60: Player one cannot move" << std::endl;
+	
+	//Test 61
+	Board myBoard3(NULL, NULL);
+	myBoard3.emptyBoard();
+	myBoard3.content[0] = "P2";
+	myBoard3.content[4] = "P1";
+	myBoard3.content[5] = "P1";
+	assert(myBoard3.canPlayerMove(2), false);
+	std::cout << "Test 61: Player two cannot move" << std::endl;
+
+	//Test 62
+	Board myBoard4(NULL, NULL);
+	myBoard4.emptyBoard();
+	myBoard4.content[31] = "P1";
+	assert(myBoard4.canPlayerMove(1), true);
+	std::cout << "Test 62: Player one can move" << std::endl;
+
+	//Test 63
+	Board myBoard5(NULL, NULL);
+	myBoard5.emptyBoard();
+	myBoard5.content[0] = "P2";
+	assert(myBoard5.canPlayerMove(2), true);
+	std::cout << "Test 63: Player two can move." << std::endl;
 }

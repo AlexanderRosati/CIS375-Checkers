@@ -9,16 +9,14 @@ void Game::resetGame()
 
 }
 
-//Description: Draws game screen.
-void Game::drawGame()
-{
-
-}
-
 //Description: Constructor for Game class
-Game::Game()
+Game::Game(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 {
+	//keep reference for sound board
+	soundBoard = refToSoundBoard;
 
+	//keep reference to game window
+	window = refToWindow;
 }
 
 //Description: Move all 32 rectangles offscreen so that user is no longer

@@ -594,36 +594,99 @@ void Board::removeChecker(int spaceNum)
 //Description: Moves what's at spaceNum to what's at whereTo
 void Board::move(int spaceNum, int whereTo)
 {
+	std::string pieceBeingMoved = content[spaceNum - 1]; //save what's being moved
+	content[spaceNum - 1] = "E"; //remove piece from board
+	content[whereTo - 1] = pieceBeingMoved; //put piece back on board
+}
 
+//Description: Empties board
+void Board::emptyBoard()
+{
+	for (int i = 0; i < 32; ++i)
+	{
+		content[i] = "E";
+	}
 }
 
 //Description: Resets game board (i.e., moves pieces to where they should be at the
 //beginning of a game.
 void Board::resetBoard()
 {
+	//remove all pieces from board
+	emptyBoard();
 
+	//put checkers on board
+	for (int i = 0; i < 12; ++i)
+	{
+		content[i] = "P2";
+	}
+
+	for (int i = 20; i < 32; ++i)
+	{
+		content[i] = "P1";
+	}
 }
 
 //Description: Player number is given as input and true is returned if that player can
 //move
 bool Board::canPlayerMove(int playerNum)
 {
-	//This isn't a priority. If this isn't implemented, we'll be fine.
-	//Do other things first.
+	//looking for checkers and kings for given player
+	std::string match1 = "P"; match1 += std::to_string(playerNum);
+	std::string match2 = "K"; match2 += std::to_string(playerNum);
 
-	//temporary please detele
-	return true;
+	//iterate through board
+	for (int i = 0; i < 32; ++i)
+	{
+		//if we find a checker or king controlled by the given player
+		if (content[i] == match1 || content[i] == match2)
+		{
+			PossibleMoves moves = possibleMoves(i + 1);
+
+			//if there is a move the player can make
+			if (moves.size() != 0)
+			{
+				return true;
+			}
+		}
+	}
+
+	//player can't make a move
+	return false;
 }
 
 //Precondition: checker at spaceNum is one that made it to the opposite end of the board.
 //Description: Kings the checer at spaceNum
 void Board::kingMe(int spaceNum)
 {
+	//if spaceNum is not at either end of the board
+	if (!((1 <= spaceNum && 4 >= spaceNum) || (29 <= spaceNum && 32 >= spaceNum)))
+	{
+		std::cout << spaceNum << " is not at either end of the board. Terminating program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
 
+	if (content[spaceNum - 1] == "P1")
+	{
+		content[spaceNum - 1] = "K1";
+	}
+
+	else if (content[spaceNum - 1] == "P2")
+	{
+		content[spaceNum - 1] = "K2";
+	}
+
+	else
+	{
+		std::cout << spaceNum << " does not have a checker on it. Terminating program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
 }
 
 //Description: constructor
-Board::Board(SoundBoard* refToSoundBoard)
+Board::Board(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 {
 	//load player one regular checker into memory
 	if (!texturePlayerOneChecker.loadFromFile("../../IMAGES/customizations/customization1/player-one-checker-customization1.png"))
@@ -699,21 +762,136 @@ Board::Board(SoundBoard* refToSoundBoard)
 	soundBoard = refToSoundBoard;
 
 	//put checkers on board
-	for (int i = 0; i < 12; ++i)
-	{
-		content[i] = "P2";
-	}
+	resetBoard();
 
-	for (int i = 20; i < 32; ++i)
-	{
-		content[i] = "P1";
-	}
+	//keep reference to game window
+	window = refToWindow;
+
+	//put board in right position
+	boardImage.setPosition(sf::Vector2f(20.0, 20.0));
 }
 
 //Description: should draw the game board and all the pieces
 void Board::drawBoard()
 {
+	//draw board
+	window->draw(boardImage);
 
+	//draw piecies
+	for (int i = 0; i < 32; ++i)
+	{
+		//if space contains regular checker controlled by player one
+		if (content[i] == "P1")
+		{
+			//vars for coordinates
+			float x = 20;
+			float y = 20;
+			int row = i / 4;
+			int col = i % 4;
+
+			//adjust for alternating rows
+			if ((row % 2) == 0)
+			{
+				x += 50;
+			}
+
+			//adjust for column
+			x += (col * 100);
+
+			//adjust for row
+			y += (row * 50);
+
+			//move rectangle
+			playerOneCheckerImg.setPosition(sf::Vector2f(x, y));
+
+			//draw checker
+			window->draw(playerOneCheckerImg);
+		}
+
+		//if space contains regular checker controlled by player two
+		else if (content[i] == "P2")
+		{
+			//vars for coordinates
+			float x = 20;
+			float y = 20;
+			int row = i / 4;
+			int col = i % 4;
+
+			//addjust for alternating rows
+			if ((row % 2) == 0)
+			{
+				x += 50;
+			}
+
+			//adjust for column
+			x += (col * 100);
+
+			//adjust for row
+			y += (row * 50);
+
+			//move rectangle
+			playerTwoCheckerImg.setPosition(sf::Vector2f(x, y));
+
+			//draw checker
+			window->draw(playerTwoCheckerImg);
+		}
+
+		//if space contains king controlled by player one
+		else if (content[i] == "K1")
+		{
+			//vars for coordinates
+			float x = 20;
+			float y = 20;
+			int row = i / 4;
+			int col = i % 4;
+
+			//addjust for alternating rows
+			if ((row % 2) == 0)
+			{
+				x += 50;
+			}
+
+			//adjust for column
+			x += (col * 100);
+
+			//adjust for row
+			y += (row * 50);
+
+			//move rectangle
+			playerOneKingImg.setPosition(sf::Vector2f(x, y));
+
+			//draw checker
+			window->draw(playerOneKingImg);
+		}
+
+		//if space contains king controlled by player two
+		else if (content[i] == "K2")
+		{
+			//vars for coordinates
+			float x = 20;
+			float y = 20;
+			int row = i / 4;
+			int col = i % 4;
+
+			//addjust for alternating rows
+			if ((row % 2) == 0)
+			{
+				x += 50;
+			}
+
+			//adjust for column
+			x += (col * 100);
+
+			//adjust for row
+			y += (row * 50);
+
+			//move rectangle
+			playerTwoKingImg.setPosition(sf::Vector2f(x, y));
+
+			//draw checker
+			window->draw(playerTwoKingImg);
+		}
+	}
 }
 
 //Description: Returns true if given number is edge space. Expects between 0-31.

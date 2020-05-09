@@ -14,7 +14,6 @@
 
 //prototypes
 void gameLoop();
-void testDriver();
 void boardClassTestDriver();
 
 //enum
@@ -23,8 +22,8 @@ enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen
 
 int main()
 {
+	boardClassTestDriver();
 	gameLoop();
-	//testDriver();
 }
 
 //Description: Game loop (aka Where everything happens).
@@ -35,13 +34,14 @@ void gameLoop()
 	sf::Event event; //event object
 	Screen whatsDisplaying; //keep track of which screen is displaying
 	CustomizationMenu customizationMenu; //customization menu object
-	Game game; //object for game screen
 	MusicSelectionMenu musicSelectionMenu; //object for music selection menu
 	SoundBoard soundBoard; //contains all sound objects
 	TitleMenu titleMenu(&window, &soundBoard); //object for title menu
 	Tutorial tutorial; //object for tutorial
 	VictoryScreen victoryScreen; //object for victory screen
-	
+	Game game(&soundBoard, &window); //object for game screen
+	Board board(&soundBoard, &window); //board object
+
 	//rectangle that covers whole screen
 	sf::RectangleShape wholeScreen;
 	wholeScreen.setPosition(sf::Vector2f(0, 0));
@@ -115,14 +115,14 @@ void gameLoop()
 		window.clear();
 
 		//draw baby blue background
-		window.draw(wholeScreen);
+		window.draw(wholeScreen);;
 
 		//draw game
 		switch (whatsDisplaying)
 		{
 			//draw game screen
 			case GameScreen:
-				game.drawGame();
+				board.drawBoard();
 				break;
 
 			//draw customization menu
@@ -153,28 +153,5 @@ void gameLoop()
 
 		//push frame to screen
 		window.display();
-	}
-}
-
-//For testing, delete stuff you added when done
-void testDriver()
-{
-	sf::RenderWindow window(sf::VideoMode(600, 600), "Checkers"); //KEEP
-	sf::Event event; //KEEP
-
-	while (window.isOpen()) //KEEP
-	{
-		while (window.pollEvent(event)) //KEEP
-		{
-			switch (event.type) //KEEP
-			{
-				case sf::Event::Closed: //KEEP
-					window.close(); //KEEP
-					break; //KEEP
-			}
-		}
-
-		window.clear(); //KEEP
-		window.display(); //KEEP
 	}
 }

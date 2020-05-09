@@ -19,12 +19,12 @@ class Game
 		sf::RectangleShape boardSpaces[32]; //array of rectangles; each coresponsds to a board space
 		std::vector<int> possibleLandingPositions; //where selected checker could be moved
 		sf::Text landingPositionMarker; //character 'M' that will be drawn to screen whereever checker can be moved
-		Board gameBoard; //Board object
 
 		//methods
-		Game();
-		void resetGame();
-		void drawGame();
+		Game(SoundBoard*, sf::RenderWindow*); //constructor
+		Game() {} //worthless default constructor
+		void resetGame(); //resets the game
+		void drawGame(); //draws the game screen
 		void moveBoardSpacesOffscreen();
 		void moveBoardSpacesOnscreen();
 
