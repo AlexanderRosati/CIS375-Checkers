@@ -36,7 +36,7 @@ void gameLoop()
 	CustomizationMenu customizationMenu(&soundBoard, &window); //customization menu object
 	MusicSelectionMenu musicSelectionMenu(&soundBoard, &window); //object for music selection menu
 	TitleMenu titleMenu(&window, &soundBoard); //object for title menu
-	Tutorial tutorial; //object for tutorial
+	Tutorial tutorial(&soundBoard, &window); //object for tutorial
 	VictoryScreen victoryScreen(&soundBoard, &window); //object for victory screen
 	Game game(&soundBoard, &window); //object for game screen
 	Board board(&soundBoard, &window); //board object
@@ -51,7 +51,7 @@ void gameLoop()
 	soundBoard.play("letsa-play");
 
 	//set enum
-	whatsDisplaying = Victory;
+	whatsDisplaying = TutorialScreen;
 
 	//game loop; loops as long as game window is open
 	while (window.isOpen())

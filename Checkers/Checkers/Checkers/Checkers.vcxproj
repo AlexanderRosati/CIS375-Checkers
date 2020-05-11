@@ -169,7 +169,7 @@
   <ItemGroup>
     <None Include="..\..\SONGS\cold-existence.ogg" />
     <None Include="..\..\SONGS\go-to-bed.ogg" />
-    <None Include="..\..\SONGS\idols.ogg" />
+    <None Include="..\..\SONGS\the-world-was-ours.ogg" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\IMAGES\customization-selection-menu\back-button-customizatin-menu.png" />
