@@ -717,7 +717,7 @@ Board::Board(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 	}
 
 	//load player one king image into memory
-	if (!texturePlayerOneKing.loadFromFile("../../IMAGES/customizations/customization1/player-one-king-custmization1.png"))
+	if (!texturePlayerOneKing.loadFromFile("../../IMAGES/customizations/customization1/player-one-king-customization1.png"))
 	{
 		std::cout << "Player one king image did not load for customization 1. Exiting program." << std::endl;
 		system("pause");

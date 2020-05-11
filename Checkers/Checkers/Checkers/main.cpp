@@ -33,7 +33,7 @@ void gameLoop()
 	sf::Event event; //event object
 	Screen whatsDisplaying; //keep track of which screen is displaying
 	SoundBoard soundBoard; //contains all sound objects
-	CustomizationMenu customizationMenu; //customization menu object
+	CustomizationMenu customizationMenu(&soundBoard, &window); //customization menu object
 	MusicSelectionMenu musicSelectionMenu(&soundBoard, &window); //object for music selection menu
 	TitleMenu titleMenu(&window, &soundBoard); //object for title menu
 	Tutorial tutorial; //object for tutorial
@@ -51,7 +51,7 @@ void gameLoop()
 	soundBoard.play("letsa-play");
 
 	//set enum
-	whatsDisplaying = MusicSelectionScreen;
+	whatsDisplaying = TitleScreen;
 
 	//game loop; loops as long as game window is open
 	while (window.isOpen())

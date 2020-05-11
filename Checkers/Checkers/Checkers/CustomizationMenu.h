@@ -13,19 +13,20 @@ class CustomizationMenu
 {
 	public:
 		SoundBoard* soundBoard; //ref to sound board
-		CustomizationMenu(); //constructor
+		CustomizationMenu(SoundBoard*, sf::RenderWindow*); //constructor
+		CustomizationMenu() {} //worthless default constructor
 		void changeCustomization(Board*, int); //method to change customizations
 		void draw(); //draw customization menu
 		void moveOffScreen(); //move customization menu offscreen
 		void moveOnscreen(); //move customization menu onscreen
-		void moveSelectionOutline(int); //move selection outline
+		void moveSelection(int); //move selection outline
 	private:
 		sf::Sprite title; //label that says 'Customization Menu'
+		sf::Texture textTitle; //texture for title of menu
 		sf::Sprite customizations[4]; //images for customizations
+		sf::Texture textCustomizations[4]; //textures for images for customizations
 		sf::Sprite backToTitleButton; //back to title button
+		sf::Texture textBackToTitleButton; //texture for back button
 		int currCustomization; //keeps track of current customization
-		sf::Texture checkerTextures[NUM_DIFF_CHECKERS]; //all checker images
-		sf::Texture kingTextures[NUM_DIFF_KINGS]; //all kings images
-		sf::Texture boardTextures[NUM_BOARDS]; //all board images
 		sf::RenderWindow* window; //ref to game window
 };
