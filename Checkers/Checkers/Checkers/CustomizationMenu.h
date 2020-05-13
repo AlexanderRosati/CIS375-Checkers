@@ -13,6 +13,9 @@ class CustomizationMenu
 {
 	public:
 		SoundBoard* soundBoard; //ref to sound board
+		sf::Sprite backToTitleButton; //back to title button
+		sf::Sprite customizations[4]; //images for customizations
+		int currCustomization; //keeps track of current customization
 		CustomizationMenu(SoundBoard*, sf::RenderWindow*); //constructor
 		CustomizationMenu() {} //worthless default constructor
 		void changeCustomization(Board*, int); //method to change customizations
@@ -23,10 +26,7 @@ class CustomizationMenu
 	private:
 		sf::Sprite title; //label that says 'Customization Menu'
 		sf::Texture textTitle; //texture for title of menu
-		sf::Sprite customizations[4]; //images for customizations
 		sf::Texture textCustomizations[4]; //textures for images for customizations
-		sf::Sprite backToTitleButton; //back to title button
 		sf::Texture textBackToTitleButton; //texture for back button
-		int currCustomization; //keeps track of current customization
 		sf::RenderWindow* window; //ref to game window
 };

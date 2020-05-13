@@ -189,6 +189,11 @@ MusicSelectionMenu::MusicSelectionMenu(SoundBoard* refToSoundBoard, sf::RenderWi
 	songs[1].setLoop(true);
 	songs[2].setLoop(true);
 
+	//set volume of songs
+	songs[0].setVolume(70);
+	songs[1].setVolume(70);
+	songs[2].setVolume(70);
+
 	//start playing first songs
 	songs[0].play();
 }

@@ -41,6 +41,18 @@ void gameLoop()
 	Game game(&soundBoard, &window); //object for game screen
 	Board board(&soundBoard, &window); //board object
 
+	//get bounds
+	sf::FloatRect playGameButtonBounds = titleMenu.playGameButton.getGlobalBounds(); //get rect for play game button
+	sf::FloatRect customizationButtonBounds = titleMenu.customizationsButton.getGlobalBounds(); //get rect for customization button
+	sf::FloatRect musicSelectionButtonBounds = titleMenu.musicSelectionButton.getGlobalBounds(); //get rect for customization button
+	sf::FloatRect tutorialButtonBounds = titleMenu.tutorialButton.getGlobalBounds(); //get rect for customization button
+	sf::FloatRect leftArrowBounds = musicSelectionMenu.leftArrow.getGlobalBounds(); //get rect for left arrow
+	sf::FloatRect rightArrowBounds = musicSelectionMenu.rightArrow.getGlobalBounds(); //get rect for right arrow
+	sf::FloatRect backButtonMusicSelectionMenuBounds = musicSelectionMenu.backToTitleScreen.getGlobalBounds(); //get rect for back button on music selection menu
+	sf::FloatRect backButtonCustMenuBounds = customizationMenu.backToTitleButton.getGlobalBounds(); //get rect for back button in customization menu
+	sf::FloatRect custButtonBounds[4]; //array full of bounds for cust buttons
+	for (int i = 0; i < 4; ++i) custButtonBounds[i] = customizationMenu.customizations[i].getGlobalBounds(); //getting bounds for cust buttons
+
 	//rectangle that covers whole screen
 	sf::RectangleShape wholeScreen;
 	wholeScreen.setPosition(sf::Vector2f(0, 0));
@@ -56,6 +68,9 @@ void gameLoop()
 	//game loop; loops as long as game window is open
 	while (window.isOpen())
 	{
+		//world coordinates of mouse
+		sf::Vector2f mouseCoord = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
 		//loops that handles all events (i.e., mouse click)
 		while (window.pollEvent(event))
 		{
@@ -84,21 +99,108 @@ void gameLoop()
 							//events for custmoziaton screen
 							case CustomizationScreen:
 								
+								//if click back button
+								if (backButtonCustMenuBounds.contains(mouseCoord))
+								{
+									soundBoard.play("click");
+									whatsDisplaying = TitleScreen;
+								}
+
+								//click on cust1 button
+								else if (customizationMenu.currCustomization != 0 && custButtonBounds[0].contains(mouseCoord))
+								{
+									//change to customization 1
+									customizationMenu.changeCustomization(&board, 1);
+								}
+
+								//click on cust2 button
+								else if (customizationMenu.currCustomization != 1 && custButtonBounds[1].contains(mouseCoord))
+								{
+									//change to customization 2
+									customizationMenu.changeCustomization(&board, 2);
+								}
+
+								//click on cust3 button
+								else if (customizationMenu.currCustomization != 2 && custButtonBounds[2].contains(mouseCoord))
+								{
+									//change to customization 3
+									customizationMenu.changeCustomization(&board, 3);
+								}
+
+								//click on cust4 button
+								else if (customizationMenu.currCustomization != 3 && custButtonBounds[3].contains(mouseCoord))
+								{
+									//change to customization 4
+									customizationMenu.changeCustomization(&board, 4);
+								}
+
 								break;
 
 							//events for music selection screen
 							case MusicSelectionScreen:
 								
+								//click left arrow
+								if (leftArrowBounds.contains(mouseCoord))
+								{
+									musicSelectionMenu.goPrevSong();
+									soundBoard.play("click");
+								}
+
+								//click right arrow
+								else if (rightArrowBounds.contains(mouseCoord))
+								{
+									musicSelectionMenu.goNextSong();
+									soundBoard.play("click");
+								}
+
+								//click back button
+								else if (backButtonMusicSelectionMenuBounds.contains(mouseCoord))
+								{
+									soundBoard.play("click");
+									whatsDisplaying = TitleScreen;
+								}
+
 								break;
 
 							//events for title screen
 							case TitleScreen:
 								
+								//if play game button is clicked
+								if (playGameButtonBounds.contains(mouseCoord))
+								{
+									whatsDisplaying = GameScreen;
+									soundBoard.play("click");
+								}
+
+								//if customization button is clicked
+								else if (customizationButtonBounds.contains(mouseCoord))
+								{
+									whatsDisplaying = CustomizationScreen;
+									soundBoard.play("click");
+								}
+
+								//if music selection button is clicked
+								else if (musicSelectionButtonBounds.contains(mouseCoord))
+								{
+									whatsDisplaying = MusicSelectionScreen;
+									soundBoard.play("click");
+								}
+
+								//if tutorial button is clicked
+								else if (tutorialButtonBounds.contains(mouseCoord))
+								{
+									whatsDisplaying = TutorialScreen;
+									soundBoard.play("click");
+								}
+
 								break;
 
 							//events for tutorial
 							case TutorialScreen:
 								
+								//go to next slide or back to title if at end
+								if (tutorial.nextSlide()) whatsDisplaying = TitleScreen;
+
 								break;
 
 							//events for victory screen
@@ -108,6 +210,61 @@ void gameLoop()
 						}
 					}
 			}
+		}
+
+		//for hovering over sprites
+		switch (whatsDisplaying)
+		{
+			case TitleScreen:
+
+				//determine if mouse is inside play game button
+				bool insidePlayGame = playGameButtonBounds.contains(mouseCoord);
+
+				//determine if mouse is inside customization button
+				bool insideCustomizations = customizationButtonBounds.contains(mouseCoord);
+
+				//determine if mouse is inside music selection button
+				bool insideMusicSelection = musicSelectionButtonBounds.contains(mouseCoord);
+
+				//determine if mouse is inside tutorial button
+				bool insideTutorial = tutorialButtonBounds.contains(mouseCoord);
+
+				//if enter play game button start drawing mario head next to it
+				if (titleMenu.selection != TitleMenu::Selection::PlayGame && insidePlayGame)
+				{
+					titleMenu.selection = TitleMenu::Selection::PlayGame;
+					titleMenu.marioHead.setPosition(sf::Vector2f(25.0, 195.0));
+				}
+
+				//if enter customization button start drawing mario head next to it
+				else if (titleMenu.selection != TitleMenu::Selection::Customizations && insideCustomizations)
+				{
+					titleMenu.selection = TitleMenu::Selection::Customizations;
+					titleMenu.marioHead.setPosition(sf::Vector2f(25.0, 295.0));
+				}
+
+				//if enter music selection button start drawing mario head next to it
+				else if (titleMenu.selection != TitleMenu::Selection::MusicSelection && insideMusicSelection)
+				{
+					titleMenu.selection = TitleMenu::Selection::MusicSelection;
+					titleMenu.marioHead.setPosition(sf::Vector2f(25.0, 395.0));
+				}
+
+				//if enter tutorial button start drawing mario head next to it
+				else if (titleMenu.selection != TitleMenu::Selection::Tutorial && insideTutorial)
+				{
+					titleMenu.selection = TitleMenu::Selection::Tutorial;
+					titleMenu.marioHead.setPosition(sf::Vector2f(25.0, 490.0));
+				}
+
+				//if outside of all buttons
+				else if (titleMenu.selection != TitleMenu::Selection::Nothing && !insidePlayGame && !insideCustomizations && 
+					!insideMusicSelection && !insideTutorial)
+				{
+					titleMenu.selection = TitleMenu::Selection::Nothing;
+				}
+
+				break;
 		}
 
 		//wipes everything off screen

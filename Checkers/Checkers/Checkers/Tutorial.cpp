@@ -40,6 +40,7 @@ void Tutorial::drawCurrSlide()
 //return true. Otherwise, return false.
 bool Tutorial::nextSlide()
 {
+	soundBoard->play("page-turn"); //play page turn sound effect
 	currSlide = (currSlide + 1) % NUM_SLIDES; //do wrap around
 	return (currSlide == 0) ? true : false; //return true if going back to first slide
 }

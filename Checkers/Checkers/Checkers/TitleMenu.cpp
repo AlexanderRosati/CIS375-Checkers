@@ -76,6 +76,19 @@ TitleMenu::TitleMenu(sf::RenderWindow* refToGameWindow, SoundBoard* refToSoundBo
 		tutorialButton.setTexture(textureTutorialButton);
 	}
 
+	//load image for mario's head
+	if (!textyMarioHead.loadFromFile("../../IMAGES/title-screen/mario_head.png"))
+	{
+		std::cout << "Image for mario's head did not load. Exiting program." << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	else
+	{
+		marioHead.setTexture(textyMarioHead);
+	}
+
 	//keep track of game window
 	window = refToGameWindow;
 
@@ -87,16 +100,20 @@ TitleMenu::TitleMenu(sf::RenderWindow* refToGameWindow, SoundBoard* refToSoundBo
 	customizationsButton.setPosition(sf::Vector2f(0, 260));
 	musicSelectionButton.setPosition(sf::Vector2f(0, 360));
 	tutorialButton.setPosition(sf::Vector2f(0, 460));
+
+	//intialize selection
+	selection = Nothing;
 }
 
 //Description: Draws title menu.
 void TitleMenu::draw()
 {
-	window->draw(title);
-	window->draw(playGameButton);
-	window->draw(customizationsButton);
-	window->draw(musicSelectionButton);
-	window->draw(tutorialButton);
+	window->draw(title); //draw title
+	window->draw(playGameButton); //draw play game button
+	window->draw(customizationsButton); //draw customizations button
+	window->draw(musicSelectionButton); //draw music selection button
+	window->draw(tutorialButton); //draw tutorial button
+	if (selection != Nothing) window->draw(marioHead); //draw mario's head
 }
 
 //Description: Moves all the buttons offscreen so user cannot click on them. By move offscreen,

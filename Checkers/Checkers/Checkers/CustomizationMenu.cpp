@@ -131,6 +131,9 @@ void CustomizationMenu::changeCustomization(Board* refToBoard, int customization
 
 	//move selection
 	moveSelection(customizationNum);
+
+	//play click sound effect
+	soundBoard->play("click");
 }
 
 //Description: Draw customization menu.
