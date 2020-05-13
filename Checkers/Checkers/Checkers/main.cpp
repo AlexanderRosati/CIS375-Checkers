@@ -51,7 +51,7 @@ void gameLoop()
 	soundBoard.play("letsa-play");
 
 	//set enum
-	whatsDisplaying = TutorialScreen;
+	whatsDisplaying = TitleScreen;
 
 	//game loop; loops as long as game window is open
 	while (window.isOpen())
@@ -121,7 +121,19 @@ void gameLoop()
 		{
 			//draw game screen
 			case GameScreen:
+				//draw board
 				board.drawBoard();
+
+				//draw interface
+				game.drawGame();
+
+				//draw checker for player one in interface
+				board.playerOneCheckerImg.setPosition(sf::Vector2f(490.0, 180.0));
+				window.draw(board.playerOneCheckerImg);
+
+				//draw checker for player two in interface
+				board.playerTwoCheckerImg.setPosition(sf::Vector2f(490.0, 240.0));
+				window.draw(board.playerTwoCheckerImg);
 				break;
 
 			//draw customization menu

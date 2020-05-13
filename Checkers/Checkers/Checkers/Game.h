@@ -6,7 +6,6 @@
 #include "Soundboard.h"
 #include "Board.h"
 
-
 class Game
 {
 	public:
@@ -19,6 +18,7 @@ class Game
 		sf::RectangleShape boardSpaces[32]; //array of rectangles; each coresponsds to a board space
 		std::vector<int> possibleLandingPositions; //where selected checker could be moved
 		sf::Text landingPositionMarker; //character 'M' that will be drawn to screen whereever checker can be moved
+		sf::Font superMarioFont; //font object
 
 		//methods
 		Game(SoundBoard*, sf::RenderWindow*); //constructor
