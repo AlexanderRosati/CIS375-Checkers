@@ -14,9 +14,12 @@ bool Board::isSpaceEmpty(int spaceNum)
 
 //Precondition: spaceNum has a checker on it
 //Description: Returns true if the checker on spaceNum is controlled by player 'playerNum'.
-bool Board::isRightPlayer(int playerNum, int spaceNum)
+bool Board::isRightPlayer(char playerNum, int spaceNum)
 {
-	return content[spaceNum - 1].at(1) == (char) playerNum;
+	std::string tmp1 = "";
+	tmp1 += content[spaceNum - 1].at(1);
+	std::string tmp2 = (playerNum == '1') ? "1" : "2";
+	return tmp1 == tmp2;
 }
 
 //Description: returns adjacent spaces. helper method of possibleMoves
@@ -316,7 +319,7 @@ PossibleMoves Board::possibleMoves(int spaceNum)
 		}
 
 		//if space contains checker controlled by same player
-		else if (isRightPlayer((int)player, space + 1))
+		else if (isRightPlayer(player, space + 1))
 		{
 			continue;
 		}
@@ -457,7 +460,7 @@ void Board::determineLandingPositions(int possibleLandingPosition, char status, 
 		}
 
 		//if adjacent space contains checker controlled by the same player
-		else if (isRightPlayer((int)status, adjSpace + 1))
+		else if (isRightPlayer(player, adjSpace + 1))
 		{
 			continue;
 		}
@@ -597,6 +600,20 @@ void Board::move(int spaceNum, int whereTo)
 	std::string pieceBeingMoved = content[spaceNum - 1]; //save what's being moved
 	content[spaceNum - 1] = "E"; //remove piece from board
 	content[whereTo - 1] = pieceBeingMoved; //put piece back on board
+
+	//if player one reaches end of board
+	if (pieceBeingMoved == "P1" && (whereTo >= 1 && whereTo <= 4))
+	{
+		content[whereTo - 1] = "K1";
+		soundBoard->play("kinged");
+	}
+
+	//if player two reaches the end of the board
+	else if (pieceBeingMoved == "P2" && (whereTo >= 29 && whereTo <= 32))
+	{
+		content[whereTo - 1] = "K2";
+		soundBoard->play("kinged");
+	}
 }
 
 //Description: Empties board
@@ -653,36 +670,6 @@ bool Board::canPlayerMove(int playerNum)
 
 	//player can't make a move
 	return false;
-}
-
-//Precondition: checker at spaceNum is one that made it to the opposite end of the board.
-//Description: Kings the checer at spaceNum
-void Board::kingMe(int spaceNum)
-{
-	//if spaceNum is not at either end of the board
-	if (!((1 <= spaceNum && 4 >= spaceNum) || (29 <= spaceNum && 32 >= spaceNum)))
-	{
-		std::cout << spaceNum << " is not at either end of the board. Terminating program." << std::endl;
-		system("pause");
-		exit(-1);
-	}
-
-	if (content[spaceNum - 1] == "P1")
-	{
-		content[spaceNum - 1] = "K1";
-	}
-
-	else if (content[spaceNum - 1] == "P2")
-	{
-		content[spaceNum - 1] = "K2";
-	}
-
-	else
-	{
-		std::cout << spaceNum << " does not have a checker on it. Terminating program." << std::endl;
-		system("pause");
-		exit(-1);
-	}
 }
 
 //Description: constructor

@@ -115,16 +115,3 @@ void TitleMenu::draw()
 	window->draw(tutorialButton); //draw tutorial button
 	if (selection != Nothing) window->draw(marioHead); //draw mario's head
 }
-
-//Description: Moves all the buttons offscreen so user cannot click on them. By move offscreen,
-//I mean move them like 2000 units down.
-void TitleMenu::movesOffscreen()
-{
-
-}
-
-//Description: Opposite of movesOffscreen
-void TitleMenu::movesOnscreen()
-{
-
-}

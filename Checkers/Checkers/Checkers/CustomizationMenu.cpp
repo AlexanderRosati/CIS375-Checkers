@@ -144,19 +144,6 @@ void CustomizationMenu::draw()
 	window->draw(backToTitleButton); //draw back to title button
 }
 
-//Description: Moves 'Back to Title' button and customization images offscreen so the user
-//cannot click on them. 
-void CustomizationMenu::moveOffScreen()
-{
-
-}
-
-//Description: Opposite of moveOffScreen.
-void CustomizationMenu::moveOnscreen()
-{
-
-}
-
 //Description: Make currently selected button slightly transparent and make newly selected button opaque.
 void CustomizationMenu::moveSelection(int newCustomization)
 {

@@ -4,7 +4,7 @@
 #include <iostream>
 
 //Description: Stop playing current song and move to next one.
-void MusicSelectionMenu:: goNextSong()
+void MusicSelectionMenu::goNextSong()
 {
 	//stop current song
 	songs[currSong].stop();
@@ -49,18 +49,6 @@ void MusicSelectionMenu:: draw()
 	window->draw(rightArrow); //draw right arrow
 	window->draw(songName); //draw song name
 	window->draw(backToTitleScreen); //draw back button
-}
-
-//Description: Moves music selection menu offscreen.
-void MusicSelectionMenu:: moveMenuOffScreen()
-{
-
-}
-
-//Description: Moves music selectio menu on screen.
-void MusicSelectionMenu:: moveMenuOnscreen()
-{
-
 }
 
 //constructor
@@ -190,9 +178,9 @@ MusicSelectionMenu::MusicSelectionMenu(SoundBoard* refToSoundBoard, sf::RenderWi
 	songs[2].setLoop(true);
 
 	//set volume of songs
-	songs[0].setVolume(70);
-	songs[1].setVolume(70);
-	songs[2].setVolume(70);
+	songs[0].setVolume(20.0);
+	songs[1].setVolume(20.0);
+	songs[2].setVolume(20.0);
 
 	//start playing first songs
 	songs[0].play();

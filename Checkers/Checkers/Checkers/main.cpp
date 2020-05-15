@@ -14,12 +14,13 @@
 
 //prototypes
 void gameLoop();
-void boardClassTestDriver();
+int whichBoadSpace(sf::FloatRect[], sf::Vector2f);
 
 //enum
 enum Screen { GameScreen, CustomizationScreen, MusicSelectionScreen, TitleScreen,
 			  TutorialScreen, Victory, Nothing };
 
+//main
 int main()
 {
 	gameLoop();
@@ -40,6 +41,8 @@ void gameLoop()
 	VictoryScreen victoryScreen(&soundBoard, &window); //object for victory screen
 	Game game(&soundBoard, &window); //object for game screen
 	Board board(&soundBoard, &window); //board object
+	sf::Image favicon; //object for favicon
+	int spaceNum = -1;
 
 	//get bounds
 	sf::FloatRect playGameButtonBounds = titleMenu.playGameButton.getGlobalBounds(); //get rect for play game button
@@ -52,6 +55,13 @@ void gameLoop()
 	sf::FloatRect backButtonCustMenuBounds = customizationMenu.backToTitleButton.getGlobalBounds(); //get rect for back button in customization menu
 	sf::FloatRect custButtonBounds[4]; //array full of bounds for cust buttons
 	for (int i = 0; i < 4; ++i) custButtonBounds[i] = customizationMenu.customizations[i].getGlobalBounds(); //getting bounds for cust buttons
+	sf::FloatRect backButtonGameScreenBounds = game.backButton.getGlobalBounds(); //get bounds for back button on game screen
+	sf::FloatRect boardSpacesBounds[32]; //array full of bounds for board spaces
+	for (int i = 0; i < 32; ++i) boardSpacesBounds[i] = game.boardSpaces[i].getGlobalBounds(); //get bounds for board spaces
+
+	//set up favicon
+	favicon.loadFromFile("../../IMAGES/favicon/favicon.png");
+	window.setIcon(16, 16, favicon.getPixelsPtr());
 
 	//rectangle that covers whole screen
 	sf::RectangleShape wholeScreen;
@@ -93,7 +103,214 @@ void gameLoop()
 						{
 							//events for game screen
 							case GameScreen:
-							
+
+								//determine if one of the board spaces was clicked and if so which one
+								spaceNum = whichBoadSpace(boardSpacesBounds, mouseCoord);
+								
+								//click back button on game screen
+								if (backButtonGameScreenBounds.contains(mouseCoord))
+								{
+									whatsDisplaying = TitleScreen; //go back to title
+									game.resetGame(); //reset game
+									board.resetBoard(); //reset board
+									soundBoard.play("click"); //play click sound effect
+								}
+
+								//if a checker is not selected
+								else if (game.selectedChecker == -1)
+								{
+									//didn't click on a board space
+									if (spaceNum == -1)
+									{
+										soundBoard.play("wrong");
+									}
+
+									//clicked on a board space
+									else
+									{
+										//space is empty
+										if (board.isSpaceEmpty(spaceNum))
+										{
+											soundBoard.play("wrong");
+										}
+
+										//wrong player
+										else if (!board.isRightPlayer(game.playersTurn, spaceNum))
+										{
+											soundBoard.play("wrong");
+										}
+
+										//clicked on checker player controls
+										else
+										{
+											//get moves for player
+											PossibleMoves possibleMoves = board.possibleMoves(spaceNum);
+
+											//if checker can't move
+											if (possibleMoves.size() == 0)
+											{
+												soundBoard.play("wrong");
+											}
+
+											//checker can move
+											else
+											{
+												//keep track of selected checker/king
+												game.selectedChecker = spaceNum;
+
+												//keep track of possible landing positions
+												game.possibleLandingPositions = possibleMoves;
+											}
+										}
+									}
+								}
+
+								//if a checker is selected
+								else if (game.selectedChecker != -1)
+								{
+									//if the player clicked a space with an 'm'
+									bool moveChecker = false;
+
+									//iterate through possible moves
+									for (int i = 0; i < game.possibleLandingPositions.size(); ++i)
+									{
+										//clicked a landing position
+										if (spaceNum == game.possibleLandingPositions.at(i).first)
+										{
+											moveChecker = true;
+											break;
+										}
+									}
+
+									//move checker
+									if (moveChecker)
+									{
+										//play checker move sound effect
+										soundBoard.play("checker-move");
+
+										//move checker
+										board.move(game.selectedChecker, spaceNum);
+
+										//remove checker from the board
+										for (int i = 0; i < game.possibleLandingPositions.size(); ++i)
+										{
+											//find right pair
+											if (spaceNum == game.possibleLandingPositions.at(i).first)
+											{
+												//iterate through spaces to remove
+												for (int j = 0; j < game.possibleLandingPositions.at(i).second.size(); ++j)
+												{
+													//remove checker
+													board.removeChecker(game.possibleLandingPositions.at(i).second.at(j));
+
+													//update display
+													if (game.playersTurn == '1')
+													{
+														game.numCheckersPlayerTwo = game.numCheckersPlayerTwo - 1;
+														game.numCheckersPlayerTwoLabel.setString("P2: " + std::to_string(game.numCheckersPlayerTwo));
+													}
+
+													else
+													{
+														game.numCheckersPlayerOne = game.numCheckersPlayerOne - 1;
+														game.numCheckersPlayerOneLabel.setString("P1: " + std::to_string(game.numCheckersPlayerOne));
+													}
+												}
+											}
+										}
+
+										//player two wins if player one runs out of checkers or can't move
+										if (game.numCheckersPlayerOne == 0 || !board.canPlayerMove(1))
+										{
+											//go to victory screen
+											whatsDisplaying = Victory;
+
+											//set victory message
+											victoryScreen.victoryMessage.setString("Player 2 Wins!!!");
+
+											//reset game
+											board.resetBoard();
+											game.resetGame();
+
+											//victory sound
+											soundBoard.play("victory");
+
+											//go to top of game loop
+											continue;
+										}
+
+										//player one wins if player two runs out of checkers or can't move
+										if (game.numCheckersPlayerTwo == 0 || !board.canPlayerMove(2))
+										{
+											//go to victory screen
+											whatsDisplaying = Victory;
+
+											//set victory message
+											victoryScreen.victoryMessage.setString("Player 1 Wins!!!");
+
+											//reset game
+											board.resetBoard();
+											game.resetGame();
+
+											//victory sound
+											soundBoard.play("victory");
+
+											//go to top of game loop
+											continue;
+										}
+
+
+										//deselect checker
+										game.selectedChecker = -1;
+									
+										//make it other person turn and update display
+										if (game.playersTurn == '1')
+										{
+											game.playersTurn = '2';
+											game.playerXsTurnLabel.setString("your turn\nplayer 2!!!");
+										}
+
+										else
+										{
+											game.playersTurn = '1';
+											game.playerXsTurnLabel.setString("your turn\nplayer 1!!!");
+										}
+
+										//remove all possible landing positions
+										game.possibleLandingPositions.clear();
+									}
+
+									//if they clicked another checker they control
+									else if (spaceNum != -1 && !board.isSpaceEmpty(spaceNum) &&
+										     board.isRightPlayer(game.playersTurn, spaceNum))
+									{
+
+										//change selected checker
+										game.selectedChecker = spaceNum;
+
+										//recalculate possible landing positions
+										game.possibleLandingPositions.clear();
+										game.possibleLandingPositions = board.possibleMoves(spaceNum);
+
+										//if clicked on checker that can't move 
+										if (game.possibleLandingPositions.size() == 0)
+										{
+											//deselect
+											game.selectedChecker = -1;
+										}
+									}
+									
+									//deselect checker otherwise
+									else
+									{
+										//deselect checker
+										game.selectedChecker = -1;
+
+										//clear all possible moves
+										game.possibleLandingPositions.clear();
+									}
+								}
+
 								break;
 
 							//events for custmoziaton screen
@@ -197,15 +414,14 @@ void gameLoop()
 
 							//events for tutorial
 							case TutorialScreen:
-								
 								//go to next slide or back to title if at end
 								if (tutorial.nextSlide()) whatsDisplaying = TitleScreen;
-
 								break;
 
 							//events for victory screen
 							case Victory:
-
+								//click left to go back to title screen
+								whatsDisplaying = TitleScreen;
 								break;
 						}
 					}
@@ -282,7 +498,7 @@ void gameLoop()
 				board.drawBoard();
 
 				//draw interface
-				game.drawGame();
+				game.drawGame(&board);
 
 				//draw checker for player one in interface
 				board.playerOneCheckerImg.setPosition(sf::Vector2f(490.0, 180.0));
@@ -322,4 +538,19 @@ void gameLoop()
 		//push frame to screen
 		window.display();
 	}
+}
+
+//description: returns which board space the mouse is in and -1 otherwise
+int whichBoadSpace(sf::FloatRect boardSpacesBounds[], sf::Vector2f mouseCoordinates)
+{
+	//iterate through board spaces
+	for (int i = 0; i < 32; ++i)
+	{
+		if (boardSpacesBounds[i].contains(mouseCoordinates))
+		{
+			return (i + 1);
+		}
+	}
+
+	return -1;
 }

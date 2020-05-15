@@ -10,8 +10,6 @@ class TitleMenu
 		TitleMenu() {} //worthless default constructor. DO NOT USE.
 		TitleMenu(sf::RenderWindow*, SoundBoard*); //constructor
 		void draw(); //draws title menu
-		void movesOffscreen(); //moves title menu offscreen
-		void movesOnscreen(); //moves title menu onscreen
 		sf::Sprite playGameButton; //button that says 'Play Game'
 		sf::Sprite musicSelectionButton; //button that says 'Music Selection Menu'
 		sf::Sprite customizationsButton; //button that says 'Customizations'

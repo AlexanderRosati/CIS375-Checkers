@@ -6,14 +6,14 @@
 //player'sTurn, etc.
 void Game::resetGame()
 {
-	playersTurn = 1; //player one goes first
+	playersTurn = '1'; //player one goes first
 	numCheckersPlayerOne = 12; //player one starts off with 12 checkers
 	numCheckersPlayerTwo = 12; //player two starts off with 12 checkers
 	selectedChecker = -1; //no checker selected at start
 	possibleLandingPositions.clear(); //no landing positions at start of game
 	numCheckersPlayerOneLabel.setString("P1: " + std::to_string(numCheckersPlayerOne)); //P1 starts off with 12 checkers
 	numCheckersPlayerTwoLabel.setString("P2: " + std::to_string(numCheckersPlayerTwo)); //P2 starts off with 12 checkers
-	playerXsTurnLabel.setString("Player 1's Turn"); //player one starts off
+	playerXsTurnLabel.setString("your turn\nplayer 1!!!"); //player one starts off
 }
 
 //Description: Constructor for Game class
@@ -32,11 +32,24 @@ Game::Game(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 	window = refToWindow;
 
 	//player one goes first
-	playersTurn = 1;
+	playersTurn = '1';
 
 	//both players start with 12 checkers
 	numCheckersPlayerOne = 12;
 	numCheckersPlayerTwo = 12;
+
+	//load texture for back button
+	if (!textBackButton.loadFromFile("../../IMAGES/music-selection-menu/backtotitlebutton.png"))
+	{
+		std::cout << "Did not load back button for game screen" << std::endl;
+		system("pause");
+		exit(-1);
+	}
+
+	else
+	{
+		backButton.setTexture(textBackButton);
+	}
 
 	//no checker selected at start
 	selectedChecker = -1;
@@ -84,6 +97,7 @@ Game::Game(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 	landingPositionMarker.setString("m");
 	landingPositionMarker.setCharacterSize(36);
 	landingPositionMarker.setPosition(sf::Vector2f(24.0, 20.0));
+	landingPositionMarker.setColor(sf::Color(255, 223, 0));
 
 	//initialize labels
 	//'checkers'
@@ -121,10 +135,9 @@ Game::Game(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 	colorPlayerTwoLabel.setFont(superMarioFont);
 
 	//'Player X's Turn'
-	playerXsTurnLabel.setString("Player 1's Turn");
-	playerXsTurnLabel.setCharacterSize(24);
+	playerXsTurnLabel.setString("your turn\nplayer 1!!!");
 	playerXsTurnLabel.setFont(superMarioFont);
-	playerXsTurnLabel.setCharacterSize(48);
+	playerXsTurnLabel.setCharacterSize(24);
 
 	//put everything into position
 	numCheckersLabel.setPosition(sf::Vector2f(440.0, 20.0)); //'checkers'
@@ -133,24 +146,12 @@ Game::Game(SoundBoard* refToSoundBoard, sf::RenderWindow* refToWindow)
 	colorsLabel.setPosition(sf::Vector2f(440.0, 140.0)); //'colors'
 	colorPlayerOneLabel.setPosition(sf::Vector2f(440.0, 190.0)); //'p1'
 	colorPlayerTwoLabel.setPosition(sf::Vector2f(440.0, 250.0)); //'p2'
-	playerXsTurnLabel.setPosition(sf::Vector2f(20.0, 460.0)); //'Player X's Turn'
-}
-
-//Description: Move all 32 rectangles offscreen so that user is no longer
-//able to click them.
-void Game::moveBoardSpacesOffscreen()
-{
-
-}
-
-//Description: Move all 32 rectangles on screen in position so that user can click them
-void Game::moveBoardSpacesOnscreen()
-{
-
+	playerXsTurnLabel.setPosition(sf::Vector2f(440.0, 330.0)); //'Player X's Turn'
+	backButton.setPosition(sf::Vector2f(0.0, 460.0)); //back button
 }
 
 //Desciption: Draw game screen.
-void Game::drawGame()
+void Game::drawGame(Board* board)
 {
 	//local vars
 	float x = 23.0;
@@ -166,11 +167,12 @@ void Game::drawGame()
 	window->draw(colorPlayerOneLabel); //'p1'
 	window->draw(colorPlayerTwoLabel); //'p2'
 	window->draw(playerXsTurnLabel); //'Player X's Turn'
+	window->draw(backButton); //draw backbutton
 	
 	//draw 'm's on board to signify where piece can be moved
 	for (int i = 0; i < possibleLandingPositions.size(); ++i)
 	{
-		spaceNum = possibleLandingPositions.at(i); //get space number
+		spaceNum = (possibleLandingPositions.at(i).first - 1); //get space number
 		row = spaceNum / 4; //get row of space number
 		col = spaceNum % 4; //get col of space number
 

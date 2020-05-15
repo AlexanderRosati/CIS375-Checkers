@@ -20,8 +20,6 @@ class CustomizationMenu
 		CustomizationMenu() {} //worthless default constructor
 		void changeCustomization(Board*, int); //method to change customizations
 		void draw(); //draw customization menu
-		void moveOffScreen(); //move customization menu offscreen
-		void moveOnscreen(); //move customization menu onscreen
 		void moveSelection(int); //move selection outline
 	private:
 		sf::Sprite title; //label that says 'Customization Menu'

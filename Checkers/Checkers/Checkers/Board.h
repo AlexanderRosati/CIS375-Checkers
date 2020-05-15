@@ -29,13 +29,12 @@ public:
 
 	//methods
 	bool isSpaceEmpty(int); //tells you if a space is empty
-	bool isRightPlayer(int, int); //used to determine if a checker belongs to a player
+	bool isRightPlayer(char, int); //used to determine if a checker belongs to a player
 	PossibleMoves possibleMoves(int); //returns spaces a checker can be moved to
 	void removeChecker(int); //removes a checker from the board
 	void move(int, int); //moves a checker
 	void resetBoard(); //resets game board
 	bool canPlayerMove(int); //determines if a player can move
-	void kingMe(int); //kings a checker
 	Board() {} //worthless default constructor. DO NOT USE.
 	Board(SoundBoard*, sf::RenderWindow*); //constructor
 	void drawBoard(); //draws board

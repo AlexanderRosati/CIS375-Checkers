@@ -14,8 +14,6 @@ class MusicSelectionMenu
 		void goNextSong(); //go to next song
 		void goPrevSong(); //go to prev song
 		void draw(); //draw music selection menu
-		void moveMenuOffScreen(); //move music selection menu offscreen
-		void moveMenuOnscreen();  //move music selection menu onscreen
 		MusicSelectionMenu() {}; //worthless default constructor
 		MusicSelectionMenu(SoundBoard*, sf::RenderWindow*); //constructor
 
